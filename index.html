@@ -3,12 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bezpieczeństwo: strona może wczytywać wyłącznie własne pliki (style, skrypt,
+       zdjęcia). Wstrzyknięty obcy kod, skrypty z innych serwerów czy formularze
+       wysyłające dane gdzie indziej zostaną zablokowane przez przeglądarkę. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <!-- Inne strony dowiedzą się tylko, że ktoś przyszedł z tej domeny — bez pełnego adresu -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>lek. wet. Dominika Balcerzak — geriatra zwierzęcy, Warszawa</title>
   <meta name="description" content="Całościowa opieka internistyczna nad psami i kotami w drugiej połowie życia. Lek. wet. Dominika Balcerzak, specjalista chorób psów i kotów — Przychodnia Weterynaryjna Kochanowskiego, ul. Kochanowskiego 23, Warszawa-Bielany.">
   <meta name="theme-color" content="#184890">
   <link rel="stylesheet" href="style.css">
-  <!-- Znacznik „działa JavaScript” — dopiero wtedy telefon zwija dłuższe teksty -->
-  <script>document.documentElement.classList.add('js');</script>
+  <script src="skrypt.js"></script>
 </head>
 <body>
 
@@ -218,7 +223,7 @@
         </div>
 
         <div class="kafle kafle--dane">
-          <div><div class="dane__nazwa">E-mail</div><div class="dane__wartosc"><a href="mailto:recepcjakochanowskiego@kochanowskiegowet.pl">recepcjakochanowskiego@<wbr>kochanowskiegowet.pl</a></div></div>
+          <div><div class="dane__nazwa">E-mail</div><div class="dane__wartosc" data-email-nazwa="recepcjakochanowskiego" data-email-domena="kochanowskiegowet.pl">recepcjakochanowskiego (małpa) <wbr>kochanowskiegowet.pl</div></div>
           <div><div class="dane__nazwa">Rejestracja</div><div class="dane__wartosc">pon.–pt. 9:00–21:00<br>sob. 10:00–14:00<br>niedziele i święta nieczynne</div></div>
           <div><div class="dane__nazwa">Konsultacje</div><div class="dane__wartosc">Psy i koty · wizyty planowe</div></div>
         </div>
@@ -248,17 +253,6 @@
   <a class="pasek-kontaktu__tel" href="tel:+48221503500">Zadzwoń</a>
   <a class="pasek-kontaktu__umow" href="https://www.kochanowskiegowet.pl/rezerwacja-wizyt-kochanowskiego">Umów wizytę online</a>
 </nav>
-
-<script>
-  // „Czytaj więcej” w sekcji O mnie (na telefonie)
-  var sekcja = document.getElementById('o-mnie');
-  var przycisk = sekcja.querySelector('.czytaj-wiecej');
-  przycisk.addEventListener('click', function () {
-    var otwarte = sekcja.classList.toggle('rozwiniete');
-    przycisk.setAttribute('aria-expanded', otwarte);
-    przycisk.textContent = otwarte ? 'Zwiń' : 'Czytaj więcej';
-  });
-</script>
 
 </body>
 </html>
