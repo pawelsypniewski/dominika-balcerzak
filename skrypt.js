@@ -6,13 +6,18 @@
 document.documentElement.classList.add('js');
 
 document.addEventListener('DOMContentLoaded', function () {
-  // „Czytaj więcej” w sekcji O mnie (na telefonie)
-  var sekcja = document.getElementById('o-mnie');
-  var przycisk = sekcja.querySelector('.czytaj-wiecej');
-  przycisk.addEventListener('click', function () {
-    var otwarte = sekcja.classList.toggle('rozwiniete');
-    przycisk.setAttribute('aria-expanded', otwarte);
-    przycisk.textContent = otwarte ? 'Zwiń' : 'Czytaj więcej';
+  // „Czytaj więcej” w sekcji O mnie (na telefonie). Każdy przycisk pokazuje
+  // tylko akapity ze swojej grupy — tej samej wartości data-grupa.
+  document.querySelectorAll('.czytaj-wiecej').forEach(function (przycisk) {
+    var grupa = przycisk.getAttribute('data-grupa');
+    przycisk.addEventListener('click', function () {
+      var otwarte = przycisk.getAttribute('aria-expanded') !== 'true';
+      document.querySelectorAll('.zwijane[data-grupa="' + grupa + '"]').forEach(function (akapit) {
+        akapit.classList.toggle('pokazane', otwarte);
+      });
+      przycisk.setAttribute('aria-expanded', otwarte);
+      przycisk.textContent = otwarte ? 'Zwiń' : 'Czytaj więcej';
+    });
   });
 
   // Adres e-mail składany dopiero w przeglądarce. W kodzie strony nie ma

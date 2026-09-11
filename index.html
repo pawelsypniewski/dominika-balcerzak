@@ -70,9 +70,11 @@
       </div>
       <div class="sekcja__tresc">
         <p class="o-mnie__wstep">W ostatnich latach długość życia naszych zwierząt domowych znacząco się wydłużyła. To zasługa w dużej mierze rosnącej świadomości Opiekunów.</p>
+        <!-- Na telefonie dwa akapity poniżej chowają się pod tym przyciskiem -->
+        <button class="czytaj-wiecej czytaj-wiecej--wstep" type="button" aria-expanded="false" data-grupa="wstep">Czytaj więcej</button>
         <div class="dwie-kolumny">
-          <p class="tekst">Mimo to wciąż jednak często słyszę: „Mój pies jest już za stary na leczenie” albo „Kot tak się zachowuje, bo jest stary”. Tymczasem przyczyną wielu zmian w zachowaniu czy kondycji Pacjenta nie jest sam wiek, lecz choroba, która przez długi czas może rozwijać się w ukryciu.</p>
-          <p class="tekst">Współczesna medycyna weterynaryjna oferuje coraz skuteczniejsze i bezpieczniejsze metody leczenia, niezależnie od wieku zwierzęcia. Dostępne są nowe terapie oraz specjalizacje porównywalne z tymi znanymi z medycyny człowieka. Starsi Pacjenci często trafiają jednak od jednego specjalisty do kolejnego — otrzymują wiele zaleceń, ale brakuje osoby, która spojrzy na ich stan całościowo i poprowadzi ich internistycznie przez drugą połowę życia.</p>
+          <p class="tekst zwijane" data-grupa="wstep">Mimo to wciąż jednak często słyszę: „Mój pies jest już za stary na leczenie” albo „Kot tak się zachowuje, bo jest stary”. Tymczasem przyczyną wielu zmian w zachowaniu czy kondycji Pacjenta nie jest sam wiek, lecz choroba, która przez długi czas może rozwijać się w ukryciu.</p>
+          <p class="tekst zwijane" data-grupa="wstep">Współczesna medycyna weterynaryjna oferuje coraz skuteczniejsze i bezpieczniejsze metody leczenia, niezależnie od wieku zwierzęcia. Dostępne są nowe terapie oraz specjalizacje porównywalne z tymi znanymi z medycyny człowieka. Starsi Pacjenci często trafiają jednak od jednego specjalisty do kolejnego — otrzymują wiele zaleceń, ale brakuje osoby, która spojrzy na ich stan całościowo i poprowadzi ich internistycznie przez drugą połowę życia.</p>
         </div>
 
         <div class="kim-jestem">
@@ -80,14 +82,14 @@
           <div class="dwie-kolumny">
             <div class="stos">
               <p class="tekst">Jestem lekarzem weterynarii, specjalistką chorób psów i kotów oraz absolwentką Wydziału Medycyny Weterynaryjnej SGGW w Warszawie, który ukończyłam w 2009 roku.</p>
-              <!-- Widoczny tylko na telefonie: pokazuje akapity oznaczone class="zwijane" -->
-              <button class="czytaj-wiecej" type="button" aria-expanded="false">Czytaj więcej</button>
-              <p class="tekst zwijane">Od 2017 roku jestem współwłaścicielką Przychodni Weterynaryjnej Kochanowskiego na warszawskich Bielanach, a od 2025 roku również współwłaścicielką jej filii na Bródnie. W swojej dotychczasowej pracy byłam także związana z branżą farmaceutyczną oraz laboratorium diagnostycznym ALAB Weterynaria.</p>
-              <p class="tekst zwijane">Przez wiele lat towarzyszyłam lekarzom onkologom, dzięki czemu zdobyłam duże doświadczenie w opiece nad zwierzętami przewlekle chorymi i geriatrycznymi. W kręgu moich zainteresowań znajduje się również neurologia, endokrynologia i gastroenterologia, co pozwala mi patrzeć na Pacjenta szerzej i łączyć objawy z różnych obszarów jego zdrowia.</p>
+              <!-- Widoczny tylko na telefonie: pokazuje akapity z tej samej grupy (data-grupa) -->
+              <button class="czytaj-wiecej" type="button" aria-expanded="false" data-grupa="kim-jestem">Czytaj więcej</button>
+              <p class="tekst zwijane" data-grupa="kim-jestem">Od 2017 roku jestem współwłaścicielką Przychodni Weterynaryjnej Kochanowskiego na warszawskich Bielanach, a od 2025 roku również współwłaścicielką jej filii na Bródnie. W swojej dotychczasowej pracy byłam także związana z branżą farmaceutyczną oraz laboratorium diagnostycznym ALAB Weterynaria.</p>
+              <p class="tekst zwijane" data-grupa="kim-jestem">Przez wiele lat towarzyszyłam lekarzom onkologom, dzięki czemu zdobyłam duże doświadczenie w opiece nad zwierzętami przewlekle chorymi i geriatrycznymi. W kręgu moich zainteresowań znajduje się również neurologia, endokrynologia i gastroenterologia, co pozwala mi patrzeć na Pacjenta szerzej i łączyć objawy z różnych obszarów jego zdrowia.</p>
             </div>
             <div class="stos">
-              <p class="tekst zwijane">W pracy szczególnie ważne jest dla mnie całościowe podejście — uporządkowanie diagnostyki, łączenie zaleceń różnych specjalistów oraz opracowanie planu leczenia dopasowanego do wieku, stanu zdrowia i możliwości konkretnego zwierzęcia i Opiekuna.</p>
-              <p class="tekst zwijane">Nie boję się również trudnych Pacjentów — w tym agresywnych kotów. Wiem, jak ważne są odpowiednie podejście, cierpliwość i poszanowanie granic zwierzęcia.</p>
+              <p class="tekst zwijane" data-grupa="kim-jestem">W pracy szczególnie ważne jest dla mnie całościowe podejście — uporządkowanie diagnostyki, łączenie zaleceń różnych specjalistów oraz opracowanie planu leczenia dopasowanego do wieku, stanu zdrowia i możliwości konkretnego zwierzęcia i Opiekuna.</p>
+              <p class="tekst zwijane" data-grupa="kim-jestem">Nie boję się również trudnych Pacjentów — w tym agresywnych kotów. Wiem, jak ważne są odpowiednie podejście, cierpliwość i poszanowanie granic zwierzęcia.</p>
               <p class="wyroznienie">Priorytetem zawsze pozostaje dla mnie komfort życia Pacjenta, jego dobrostan oraz zapewnienie mu możliwie najlepszego funkcjonowania na każdym etapie choroby i starzenia się.</p>
             </div>
           </div>

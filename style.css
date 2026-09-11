@@ -673,7 +673,10 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .stos { gap: 16px; }
   .wyroznienie { padding: 20px; font-size: 16px; }
 
-  .js #o-mnie:not(.rozwiniete) .zwijane { display: none; }
+  /* Akapity schowane pod „Czytaj więcej”, dopóki ktoś nie kliknie
+     (skrypt dodaje im klasę „pokazane”) */
+  .js .zwijane:not(.pokazane) { display: none; }
+  .czytaj-wiecej--wstep[aria-expanded="true"] { margin-bottom: 16px; }
 
   .js .czytaj-wiecej {
     display: inline-flex;
@@ -692,7 +695,7 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
     cursor: pointer;
   }
   .czytaj-wiecej::after { content: '↓'; font-size: 14px; }
-  .rozwiniete .czytaj-wiecej::after { content: '↑'; }
+  .czytaj-wiecej[aria-expanded="true"]::after { content: '↑'; }
 
   .kafle--liczby { grid-template-columns: 1fr 1fr; margin-top: 28px; }
   .kafle--liczby > * { padding: 14px; }
