@@ -1,0 +1,694 @@
+/* lek. wet. Dominika Balcerzak — strona wizytówka
+   Przeniesione z projektu Claude Design „Dominika Balcerzak.dc.html”. */
+
+:root {
+  --czarny: #000;
+  --bialy: #fff;
+  --niebieski: #184890;
+  --morski: #1ca89e;
+  --linia: 2px solid var(--czarny);
+  --szerokosc: 1400px;
+  --wysokosc-naglowka: 64px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+html,
+body { margin: 0; padding: 0; background: var(--bialy); }
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: var(--czarny);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: var(--niebieski); text-decoration: none; }
+a:hover { color: var(--morski); }
+
+::selection { background: var(--morski); color: var(--bialy); }
+
+:focus-visible { outline: 3px solid var(--morski); outline-offset: 2px; }
+
+h1, h2, h3, p { margin: 0; }
+
+.kontener {
+  max-width: var(--szerokosc);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Sekcje przewijane z menu nie chowają się pod przyklejonym nagłówkiem */
+section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
+
+/* ---------- Drobne elementy typograficzne ---------- */
+
+.etykieta {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.belka { margin-top: 20px; width: 56px; height: 8px; background: var(--morski); }
+.belka--niebieska { background: var(--niebieski); }
+
+.prowadzacy {
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+
+.tekst {
+  font-size: 16px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- Nagłówek ---------- */
+
+.naglowek {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bialy);
+  border-bottom: var(--linia);
+}
+
+.naglowek__wnetrze {
+  display: flex;
+  align-items: stretch;
+  min-height: var(--wysokosc-naglowka);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: auto;
+  padding-right: 24px;
+  color: var(--czarny);
+}
+.logo:hover { color: var(--czarny); }
+
+.logo__znak { display: block; width: 22px; height: 22px; background: var(--morski); flex: none; }
+
+.logo__nazwa {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.menu { display: flex; align-items: stretch; }
+
+.menu a,
+.umow {
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--czarny);
+  white-space: nowrap;
+}
+.menu a:hover { color: var(--morski); }
+
+.umow {
+  padding: 0 20px;
+  background: var(--niebieski);
+  color: var(--bialy);
+}
+.umow:hover { background: var(--morski); color: var(--bialy); }
+
+/* ---------- Siatka sekcji: 12 kolumn, podział 3 / 9 ---------- */
+
+.siatka {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  border-bottom: var(--linia);
+}
+
+.sekcja__bok {
+  grid-column: span 3;
+  min-width: 0;
+  padding: 40px 32px 56px 0;
+}
+
+.sekcja__bok-przyklejony { position: sticky; top: 96px; }
+
+.sekcja__tytul {
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.sekcja__tresc {
+  grid-column: span 9;
+  min-width: 0;
+  border-left: var(--linia);
+  padding: 40px 0 56px 40px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero__tekst {
+  grid-column: span 7;
+  min-width: 0;
+  padding: 72px 40px 48px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.hero__nadtytul { color: var(--morski); margin-bottom: 28px; }
+
+.hero__tytul {
+  font-size: clamp(40px, 6.4vw, 92px);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.hero__pasek { margin-top: 28px; height: 14px; background: var(--niebieski); }
+
+.hero__podtytul {
+  margin-top: 14px;
+  font-size: clamp(18px, 2vw, 26px);
+  letter-spacing: -0.01em;
+}
+
+.hero__opis {
+  max-width: 46ch;
+  font-size: 17px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* Pole na portret ma co najmniej proporcje zdjęcia (4:5), więc zdjęcie
+   mieści się w całości. Gdy tekst obok jest wyższy (tablety), obraz
+   przycina się po równo z obu boków. */
+.hero__zdjecie {
+  grid-column: span 5;
+  min-width: 0;
+  border-left: var(--linia);
+  position: relative;
+  min-height: 420px;
+  aspect-ratio: 4 / 5;
+  justify-self: stretch;
+  align-self: stretch;
+}
+
+
+/* ---------- Miejsce na zdjęcie ----------
+   Pusty .zdjecie pokazuje podpis. Wystarczy wstawić do środka
+   <img src="zdjecia/…" alt="…"> — obrazek wypełni całe pole. */
+
+.zdjecie {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: rgba(127, 127, 127, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  text-align: center;
+  font: 500 13px/1.3 system-ui, -apple-system, sans-serif;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.zdjecie svg { opacity: 0.45; }
+
+.zdjecie img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- O mnie ---------- */
+
+.o-mnie__wstep {
+  margin-bottom: 24px;
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  max-width: 34ch;
+  font-weight: 700;
+  text-wrap: pretty;
+}
+
+.dwie-kolumny {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 40px;
+}
+
+.dwie-kolumny + .kim-jestem { margin-top: 48px; }
+
+.stos { display: flex; flex-direction: column; gap: 20px; }
+
+.kim-jestem { border-top: var(--linia); padding-top: 32px; }
+
+.kim-jestem h3 {
+  margin-bottom: 24px;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+.wyroznienie {
+  background: var(--morski);
+  color: var(--bialy);
+  padding: 24px;
+  font-size: 17px;
+  line-height: 1.45;
+  font-weight: 700;
+  text-wrap: pretty;
+}
+
+/* Tabelka z polami oddzielonymi czarną linią (liczby, kafle, kontakt) */
+.kafle {
+  display: grid;
+  gap: 2px;
+  background: var(--bialy);
+  border: var(--linia);
+}
+
+.kafle > * {
+  background: var(--bialy);
+  box-shadow: 0 0 0 1px var(--czarny);
+}
+
+.kafle--liczby { margin-top: 40px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.kafle--liczby > * { padding: 20px; }
+
+.liczba { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.liczba--niebieska { color: var(--niebieski); }
+
+.liczba-opis {
+  margin-top: 8px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Moi Pacjenci ---------- */
+
+.pacjenci__wstep { margin-bottom: 36px; max-width: 40ch; }
+
+.kafle--obszary { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
+
+.obszar {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.obszar__znak { width: 18px; height: 18px; background: var(--morski); }
+.obszar__znak--niebieski { background: var(--niebieski); }
+
+.obszar h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.015em; }
+.obszar p { font-size: 15px; line-height: 1.55; }
+
+.etapy-blok { margin-top: 40px; border-top: var(--linia); padding-top: 28px; }
+.etapy-blok .etykieta { margin-bottom: 20px; }
+
+.etapy {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 28px;
+}
+
+.etap { border-top: 6px solid var(--morski); padding-top: 14px; }
+.etap--niebieski { border-top-color: var(--niebieski); }
+
+.etap__nazwa { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
+.etap p { margin-top: 8px; font-size: 15px; line-height: 1.55; }
+
+.kafle--zdjecia { margin-top: 40px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.kafle--zdjecia > * { position: relative; height: 220px; }
+
+/* ---------- Publikacje (ciemna sekcja) ---------- */
+
+.publikacje { background: var(--czarny); color: var(--bialy); }
+.publikacje .siatka { border-bottom: 0; }
+.publikacje .sekcja__tresc { border-left-color: var(--bialy); }
+
+.publikacja,
+.publikacje__glowka {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) 140px;
+  border-top: 1px solid var(--bialy);
+}
+
+.publikacje__glowka {
+  padding: 12px 0;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--morski);
+}
+
+.publikacja {
+  padding: 22px 0;
+  color: var(--bialy);
+  align-items: baseline;
+}
+.publikacja:last-of-type { border-bottom: 1px solid var(--bialy); }
+a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
+
+.publikacja__rok { font-size: 15px; font-weight: 700; }
+.publikacja__opis { padding-right: 24px; }
+.publikacja__tytul { font-size: 19px; line-height: 1.3; letter-spacing: -0.015em; }
+.publikacja__zrodlo { margin-top: 6px; font-size: 14px; color: var(--morski); }
+
+.do-prawej { text-align: right; }
+
+.publikacja__typ {
+  text-align: right;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.publikacje__uwaga {
+  margin-top: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--morski);
+  max-width: 60ch;
+}
+
+/* ---------- Umów się ---------- */
+
+.kontakt__wstep { margin-bottom: 32px; max-width: 44ch; }
+
+.kafle--placowki { grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); }
+
+.placowka {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.placowka__miejsce {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--niebieski);
+}
+
+.placowka h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+
+.placowka address { font-style: normal; font-size: 15px; line-height: 1.6; }
+
+.kafle > .placowka--akcja {
+  background: var(--morski);
+  color: var(--bialy);
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.placowka--akcja p { font-size: 15px; line-height: 1.55; }
+
+.przycisk {
+  display: inline-block;
+  background: var(--czarny);
+  color: var(--bialy);
+  padding: 16px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.przycisk:hover { background: var(--niebieski); color: var(--bialy); }
+
+/* Drugi, słabszy przycisk — obrys zamiast czarnego tła */
+.przycisk--jasny {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--czarny);
+  color: var(--czarny);
+}
+.przycisk--jasny:hover { background: var(--czarny); color: var(--bialy); }
+
+.przyciski { display: flex; flex-direction: column; gap: 8px; }
+
+.kafle--dane {
+  margin-top: 2px;
+  border-top: 0;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.kafle--dane > * { padding: 20px; }
+
+.dane__nazwa {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--niebieski);
+}
+.dane__wartosc { margin-top: 8px; font-size: 16px; overflow-wrap: anywhere; }
+
+/* ---------- Stopka ---------- */
+
+.stopka { background: var(--niebieski); color: var(--bialy); }
+
+.stopka__wnetrze {
+  padding-top: 36px;
+  padding-bottom: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.stopka__nazwa {
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.stopka__podpis {
+  margin-top: 8px;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stopka__menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.stopka__menu a { color: var(--bialy); }
+.stopka__menu a:hover { color: var(--bialy); text-decoration: underline; text-underline-offset: 4px; }
+
+/* ---------- Tablet i telefon ----------
+   Projekt był rysowany na 1440 px. Poniżej 900 px kolumny układają się
+   jedna pod drugą, a pionowe linie zamieniają się w poziome. */
+
+@media (max-width: 900px) {
+  .hero__tekst,
+  .hero__zdjecie,
+  .sekcja__bok,
+  .sekcja__tresc { grid-column: 1 / -1; }
+
+  .hero__tekst { padding: 48px 0 40px; gap: 36px; }
+
+  .hero__zdjecie {
+    border-left: 0;
+    border-top: var(--linia);
+    margin: 0 -24px;
+    min-height: 0;
+  }
+
+  .sekcja__bok { padding: 36px 0 24px; }
+  .sekcja__bok-przyklejony { position: static; }
+
+  .sekcja__tresc { border-left: 0; padding: 0 0 48px; }
+}
+
+/* Elementy tylko dla telefonu — na większych ekranach schowane */
+.pasek-kontaktu,
+.czytaj-wiecej { display: none; }
+
+/* ---------- Telefon: wersja uproszczona ----------
+   Ta sama treść, ale krócej i ciaśniej: nagłówek nie zabiera miejsca
+   na ekranie, kontakt jest zawsze pod kciukiem w pasku na dole,
+   dłuższy życiorys chowa się pod „Czytaj więcej”. */
+
+@media (max-width: 720px) {
+  /* Miejsce na pasek kontaktu: 56 px przycisków + 2 px linii */
+  body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+
+  /* Nagłówek: zwykły, nie przyklejony — jego rolę przejmuje pasek na dole */
+  .naglowek { position: static; }
+  section[id] { scroll-margin-top: 0; }
+
+  .naglowek__wnetrze { flex-direction: column; padding: 0; min-height: 0; }
+  .logo { padding: 14px 24px; margin-right: 0; }
+  .umow { display: none; }
+
+  .menu {
+    border-top: var(--linia);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .menu::-webkit-scrollbar { display: none; }
+  .menu a { padding: 12px 14px; }
+  .menu a:first-child { padding-left: 24px; }
+
+  /* Pasek kontaktu przyklejony do dołu ekranu */
+  .pasek-kontaktu {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    background: var(--bialy);
+    border-top: var(--linia);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pasek-kontaktu a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pasek-kontaktu__tel { color: var(--czarny); border-right: var(--linia); }
+  .pasek-kontaktu__tel:hover { color: var(--morski); }
+  .pasek-kontaktu__umow { background: var(--niebieski); color: var(--bialy); }
+  .pasek-kontaktu__umow:hover { background: var(--morski); color: var(--bialy); }
+
+  /* Hero */
+  .hero__tekst { padding: 32px 0 28px; gap: 20px; }
+  .hero__nadtytul { margin-bottom: 16px; }
+  .hero__pasek { margin-top: 18px; height: 10px; }
+  .hero__opis { font-size: 16px; }
+
+  /* Nagłówki sekcji — mniej pustego miejsca */
+  .sekcja__bok { padding: 28px 0 16px; }
+  .sekcja__tytul br { display: none; }
+  .belka { margin-top: 12px; width: 40px; height: 6px; }
+  .sekcja__tresc { padding-bottom: 36px; }
+
+  /* O mnie */
+  .o-mnie__wstep { font-size: 20px; margin-bottom: 16px; }
+  .dwie-kolumny { gap: 16px; }
+  .dwie-kolumny + .kim-jestem { margin-top: 28px; }
+  .kim-jestem { padding-top: 24px; }
+  .kim-jestem h3 { margin-bottom: 16px; }
+  .stos { gap: 16px; }
+  .wyroznienie { padding: 20px; font-size: 16px; }
+
+  .js #o-mnie:not(.rozwiniete) .zwijane { display: none; }
+
+  .js .czytaj-wiecej {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: var(--linia);
+    background: var(--bialy);
+    color: var(--czarny);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .czytaj-wiecej::after { content: '↓'; font-size: 14px; }
+  .rozwiniete .czytaj-wiecej::after { content: '↑'; }
+
+  .kafle--liczby { grid-template-columns: 1fr 1fr; margin-top: 28px; }
+  .kafle--liczby > * { padding: 14px; }
+  .liczba { font-size: 24px; }
+
+  /* Moi Pacjenci */
+  .pacjenci__wstep { margin-bottom: 20px; }
+
+  .obszar {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 6px;
+  }
+  .obszar__znak { width: 14px; height: 14px; margin-top: 4px; }
+  .obszar h3 { font-size: 17px; }
+  .obszar p { grid-column: 2; font-size: 14px; }
+
+  .etapy-blok { margin-top: 28px; padding-top: 20px; }
+  .etapy { grid-template-columns: 1fr; gap: 14px; }
+  .etap { border-top: 0; border-left: 4px solid var(--morski); padding: 2px 0 2px 14px; }
+  .etap--niebieski { border-left-color: var(--niebieski); }
+  .etap p { margin-top: 2px; font-size: 14px; }
+
+  /* Zdjęcia Pacjentów: jeden rząd przewijany palcem w bok */
+  .kafle--zdjecia {
+    display: flex;
+    margin-top: 28px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .kafle--zdjecia::-webkit-scrollbar { display: none; }
+  .kafle--zdjecia > * { flex: 0 0 78%; height: 200px; scroll-snap-align: start; }
+
+  /* Publikacje */
+  .publikacje__glowka,
+  .publikacja { grid-template-columns: 56px minmax(0, 1fr); }
+  .publikacje__glowka > :last-child { display: none; }
+  .publikacja { padding: 16px 0; }
+  .publikacja__tytul { font-size: 17px; }
+  .publikacja__typ { grid-column: 2; text-align: left; margin-top: 8px; }
+  .publikacja__opis { padding-right: 0; }
+
+  /* Umów się */
+  .kontakt__wstep { margin-bottom: 20px; }
+  .placowka { padding: 20px; gap: 10px; }
+  .placowka h3 { font-size: 19px; }
+  .kafle--dane > * { padding: 16px 20px; }
+
+  /* Stopka */
+  .stopka__wnetrze { padding-top: 28px; padding-bottom: 28px; }
+}
