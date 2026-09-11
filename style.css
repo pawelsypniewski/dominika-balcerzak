@@ -161,24 +161,32 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   min-width: 0;
   border-left: var(--linia);
   padding: 40px 0 56px 40px;
+  /* Kafelki w środku dobierają liczbę kolumn do szerokości tej kolumny */
+  container-type: inline-size;
 }
 
 /* ---------- Hero ---------- */
 
+/* Odstępy i wielkość nazwiska kurczą się na niskich ekranach (laptopy
+   1280×720, 1366×768), żeby cały pierwszy ekran mieścił się bez przewijania.
+   „svh” = wysokość ekranu; linijka z „vh” to zapas dla starszych przeglądarek. */
 .hero__tekst {
   grid-column: span 7;
   min-width: 0;
   padding: 72px 40px 48px 0;
+  padding: clamp(36px, 8svh, 72px) 40px clamp(28px, 5svh, 48px) 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 48px;
+  gap: clamp(24px, 5svh, 48px);
 }
 
 .hero__nadtytul { color: var(--morski); margin-bottom: 28px; }
 
 .hero__tytul {
   font-size: clamp(40px, 6.4vw, 92px);
+  font-size: clamp(40px, min(6.4vw, 11.5svh), 92px);
   line-height: 0.92;
   letter-spacing: -0.035em;
   font-weight: 700;
@@ -200,19 +208,21 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   text-wrap: pretty;
 }
 
-/* Pole na portret ma co najmniej proporcje zdjęcia (4:5), więc zdjęcie
-   mieści się w całości. Gdy tekst obok jest wyższy (tablety), obraz
-   przycina się po równo z obu boków. */
+/* Pole na portret ma proporcje zdjęcia (4:5), ale nie jest wyższe niż ekran
+   pod nagłówkiem — wtedy zdjęcie przycina się z dołu (stół), a twarz zostaje.
+   Gdy tekst obok jest wyższy, pole rośnie razem z nim i przycina boki.
+   --szer-kol to szerokość kolumny ze zdjęciem (5 z 12, najwyżej 563 px). */
 .hero__zdjecie {
   grid-column: span 5;
   min-width: 0;
   border-left: var(--linia);
   position: relative;
-  min-height: 420px;
-  aspect-ratio: 4 / 5;
-  justify-self: stretch;
-  align-self: stretch;
+  --szer-kol: min((100vw - 48px) * 5 / 12, 563px);
+  min-height: max(420px, min(var(--szer-kol) * 1.25, 100vh - 68px));
+  min-height: max(420px, min(var(--szer-kol) * 1.25, 100svh - 68px));
 }
+
+.hero__zdjecie img { object-position: 50% 25%; }
 
 
 /* ---------- Miejsce na zdjęcie ----------
@@ -300,7 +310,7 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   box-shadow: 0 0 0 1px var(--czarny);
 }
 
-.kafle--liczby { margin-top: 40px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.kafle--liczby { margin-top: 40px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .kafle--liczby > * { padding: 20px; }
 
 .liczba { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
@@ -317,7 +327,7 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
 .pacjenci__wstep { margin-bottom: 36px; max-width: 40ch; }
 
-.kafle--obszary { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
+.kafle--obszary { grid-template-columns: minmax(0, 1fr); }
 
 .obszar {
   padding: 24px;
@@ -340,7 +350,7 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 28px;
 }
 
@@ -350,7 +360,7 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 .etap__nazwa { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
 .etap p { margin-top: 8px; font-size: 15px; line-height: 1.55; }
 
-.kafle--zdjecia { margin-top: 40px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.kafle--zdjecia { margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
 .kafle--zdjecia > * { position: relative; height: 220px; }
 
 /* ---------- Publikacje (ciemna sekcja) ---------- */
@@ -408,7 +418,7 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 
 .kontakt__wstep { margin-bottom: 32px; max-width: 44ch; }
 
-.kafle--placowki { grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); }
+.kafle--placowki { grid-template-columns: minmax(0, 1fr); }
 
 .placowka {
   padding: 28px;
@@ -464,7 +474,7 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 .kafle--dane {
   margin-top: 2px;
   border-top: 0;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 .kafle--dane > * { padding: 20px; }
 
@@ -515,6 +525,45 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 .stopka__menu a { color: var(--bialy); }
 .stopka__menu a:hover { color: var(--bialy); text-decoration: underline; text-underline-offset: 4px; }
 
+/* ---------- Siatki kafelków ----------
+   Liczba kolumn zależy od miejsca w kolumnie treści, nie od ekranu,
+   i zawsze jest to 4 / 2 / 1 (albo 3 / 1) — w ostatnim rzędzie nigdy
+   nie zostaje samotny kafelek. Progi dobrane tak, żeby najdłuższe słowa
+   („Specjalista”, „gastroenterologia”) mieściły się w kafelku. */
+
+@container (min-width: 400px) {
+  .etapy { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (min-width: 480px) {
+  .kafle--obszary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (min-width: 560px) {
+  .kafle--zdjecia { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@container (min-width: 600px) {
+  .kafle--placowki { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (min-width: 640px) {
+  .kafle--dane { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@container (min-width: 840px) {
+  .etapy { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@container (min-width: 880px) {
+  .kafle--liczby { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@container (min-width: 920px) {
+  .kafle--obszary { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ---------- Małe laptopy i iPady poziomo (901–1279 px) ----------
+   Pierwszy ekran dzielony pół na pół, żeby portret nie był wąskim paskiem. */
+
+@media (min-width: 901px) and (max-width: 1279px) {
+  .hero__tekst { grid-column: span 6; }
+  .hero__zdjecie { grid-column: span 6; --szer-kol: calc((100vw - 48px) / 2); }
+}
+
 /* ---------- Tablet i telefon ----------
    Projekt był rysowany na 1440 px. Poniżej 900 px kolumny układają się
    jedna pod drugą, a pionowe linie zamieniają się w poziome. */
@@ -527,11 +576,14 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 
   .hero__tekst { padding: 48px 0 40px; gap: 36px; }
 
+  /* Portret pod tekstem na całą szerokość, ale najwyżej 3/4 ekranu
+     (na iPadzie pionowo nie zasłania już całego widoku) */
   .hero__zdjecie {
     border-left: 0;
     border-top: var(--linia);
     margin: 0 -24px;
-    min-height: 0;
+    min-height: min(125vw, 75vh);
+    min-height: min(125vw, 75svh);
   }
 
   .sekcja__bok { padding: 36px 0 24px; }
@@ -694,4 +746,44 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 
   /* Stopka */
   .stopka__wnetrze { padding-top: 28px; padding-bottom: 28px; }
+}
+
+/* ---------- Telefon trzymany poziomo ----------
+   Ekran ma tylko ~350 px wysokości: nagłówek nie jest przyklejony,
+   pasek kontaktu jest niższy, a portret wraca obok tekstu zamiast
+   zajmować kilka ekranów pod nim. */
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 560px) {
+  .naglowek { position: static; }
+  section[id] { scroll-margin-top: 0; }
+
+  .hero__tekst { grid-column: span 6; padding: 20px 20px 20px 0; gap: 16px; }
+  .hero__nadtytul { margin-bottom: 12px; }
+  .hero__pasek { margin-top: 14px; height: 8px; }
+  .hero__podtytul { font-size: 16px; }
+  .hero__opis { font-size: 15px; }
+
+  .hero__zdjecie {
+    grid-column: span 6;
+    margin: 0;
+    border-top: 0;
+    border-left: var(--linia);
+    min-height: calc((100vw - 48px) / 2 * 1.25);
+  }
+
+  body { padding-bottom: calc(46px + env(safe-area-inset-bottom)); }
+  .pasek-kontaktu a { min-height: 44px; }
+}
+
+/* ---------- Ekrany dotykowe (telefony, iPady) ----------
+   Każdy link i przycisk ma co najmniej 44 px wysokości — tyle zaleca
+   Apple, żeby łatwo trafić palcem. */
+
+@media (pointer: coarse) {
+  .menu a { min-height: 44px; }
+  .czytaj-wiecej { min-height: 44px; }
+  .stopka__menu { gap: 0 24px; }
+  .stopka__menu a { display: inline-flex; align-items: center; min-height: 44px; }
+  .placowka address a { display: inline-flex; align-items: center; min-height: 44px; }
+  .dane__wartosc a { display: inline-block; padding: 4px 0; }
 }

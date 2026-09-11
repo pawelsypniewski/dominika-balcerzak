@@ -9,8 +9,26 @@ Jednostronicowa wizytówka przeniesiona z projektu Claude Design
 - `zdjecia/` — zdjęcia; oryginały leżą w `Praca/Strona Internetowa dominika/gotowe/`
   - `portret.jpg` — 1200×1500 (4:5)
   - `pacjent-1-kot.jpg`, `pacjent-2-bernenczyk.jpg`, `pacjent-3-owczarek.jpg` — 1500×998 (3:2)
+  - każde zdjęcie ma też lżejszą kopię `…-800.jpg` (800 px szerokości) — przeglądarka
+    sama wybiera wersję pasującą do ekranu
 
-Podmiana zdjęcia: nowy plik pod tą samą nazwą w `zdjecia/` i odświeżenie strony.
+Podmiana zdjęcia: nowy plik pod tą samą nazwą w `zdjecia/` **i nowa kopia 800 px**
+(inaczej część ekranów pokaże stare zdjęcie):
+
+    sips --resampleWidth 800 -s formatOptions 80 zdjecia/portret.jpg --out zdjecia/portret-800.jpg
+
+## Ekrany
+
+Sprawdzone na: iPhone SE–16 Pro Max (pionowo i poziomo), iPad mini / Air / Pro 11 / Pro 13
+(pionowo i poziomo), MacBook Air 13/15, MacBook Pro 14/16, laptopy 1280×720, 1366×768,
+1536×864, monitory 1920×1080 i 2560×1440.
+
+- do 720 px — wersja na telefon (pasek kontaktu na dole, zwijany życiorys)
+- 721–900 px — iPad pionowo: sekcje jedna pod drugą
+- 901–1279 px — iPad poziomo / małe laptopy: pierwszy ekran pół na pół
+- od 1280 px — pełny układ z projektu
+- kafelki dobierają kolumny do miejsca (4 / 2 / 1), nigdy 3 + 1
+- na niskich ekranach nazwisko i odstępy się kurczą, żeby pierwszy ekran mieścił się w całości
 
 ## Bezpieczeństwo
 
