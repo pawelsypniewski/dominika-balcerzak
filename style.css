@@ -38,6 +38,9 @@ a:hover { color: var(--morski); }
 
 h1, h2, h3, p { margin: 0; }
 
+/* Atrybut hidden zawsze ukrywa element, nawet gdy klasa ustawia mu display */
+[hidden] { display: none !important; }
+
 .kontener {
   max-width: var(--szerokosc);
   margin: 0 auto;
