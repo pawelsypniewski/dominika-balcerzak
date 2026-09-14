@@ -336,7 +336,6 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 .kafle--liczby > * { padding: 20px; }
 
 .liczba { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
-.liczba--niebieska { color: var(--niebieski); }
 
 .liczba-opis {
   margin-top: 8px;
