@@ -485,6 +485,52 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   max-width: 60ch;
 }
 
+/* ---------- Kiedy się zgłosić ---------- */
+
+.kiedy__wstep { margin-bottom: 8px; max-width: 46ch; }
+
+.sygnaly {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 40px;
+}
+
+/* Morski kwadrat zamiast kropki — ten sam znak co przy kafelkach obszarów */
+.sygnal {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 4px 14px;
+  padding: 16px 0;
+  border-top: var(--linia);
+}
+.sygnal::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  background: var(--morski);
+  grid-row: span 2;   /* kwadrat obok obu wierszy, hasło i opis jeden pod drugim */
+}
+.sygnal b { font-size: 17px; font-weight: 700; letter-spacing: -0.015em; }
+.sygnal span { display: block; margin-top: 4px; font-size: 15px; line-height: 1.5; }
+
+/* Ostrzeżenie „nie czekaj” — ramka jak w polityce prywatności */
+.sygnaly__uwaga {
+  margin-top: 32px;
+  padding: 20px;
+  border: var(--linia);
+  border-left: 10px solid var(--morski);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 70ch;
+}
+
+.kiedy__zachęta { margin-top: 24px; font-size: 17px; font-weight: 700; }
+.kiedy__zachęta a { text-decoration: underline; text-underline-offset: 4px; }
+
 /* ---------- Umów się ---------- */
 
 .kontakt__wstep { margin-bottom: 32px; max-width: 44ch; }
@@ -693,6 +739,9 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .etap { border-top: 0; border-left: 4px solid var(--morski); padding: 2px 0 2px 14px; }
   .etap--niebieski { border-left-color: var(--niebieski); }
   .etap p { margin-top: 2px; }
+}
+@container (min-width: 620px) {
+  .sygnaly { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @container (min-width: 880px) {
   .kafle--liczby { grid-template-columns: repeat(4, minmax(0, 1fr)); }
