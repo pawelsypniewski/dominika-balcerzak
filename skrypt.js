@@ -10,13 +10,15 @@ document.addEventListener('DOMContentLoaded', function () {
   // tylko akapity ze swojej grupy — tej samej wartości data-grupa.
   document.querySelectorAll('.czytaj-wiecej').forEach(function (przycisk) {
     var grupa = przycisk.getAttribute('data-grupa');
+    // Każdy przycisk wraca do swojego napisu, nie do wspólnego „Czytaj więcej”
+    var etykieta = przycisk.textContent;
     przycisk.addEventListener('click', function () {
       var otwarte = przycisk.getAttribute('aria-expanded') !== 'true';
       document.querySelectorAll('.zwijane[data-grupa="' + grupa + '"]').forEach(function (akapit) {
         akapit.classList.toggle('pokazane', otwarte);
       });
       przycisk.setAttribute('aria-expanded', otwarte);
-      przycisk.textContent = otwarte ? 'Zwiń' : 'Czytaj więcej';
+      przycisk.textContent = otwarte ? 'Zwiń' : etykieta;
     });
   });
 
