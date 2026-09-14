@@ -528,8 +528,6 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   max-width: 70ch;
 }
 
-.kiedy__zachęta { margin-top: 24px; font-size: 17px; font-weight: 700; }
-.kiedy__zachęta a { text-decoration: underline; text-underline-offset: 4px; }
 
 /* ---------- Umów się ---------- */
 
