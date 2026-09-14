@@ -502,8 +502,9 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 .sygnal {
   display: grid;
   grid-template-columns: 14px minmax(0, 1fr);
+  align-content: start;   /* opis trzyma się hasła, nie rozjeżdża się do wysokości wiersza */
   gap: 4px 14px;
-  padding: 16px 0;
+  padding: 18px 0;
   border-top: var(--linia);
 }
 .sygnal::before {
@@ -514,8 +515,8 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   background: var(--morski);
   grid-row: span 2;   /* kwadrat obok obu wierszy, hasło i opis jeden pod drugim */
 }
-.sygnal b { font-size: 17px; font-weight: 700; letter-spacing: -0.015em; }
-.sygnal span { display: block; margin-top: 4px; font-size: 15px; line-height: 1.5; }
+.sygnal b { font-size: 18px; font-weight: 700; letter-spacing: -0.015em; }
+.sygnal span { display: block; margin-top: 7px; font-size: 15px; line-height: 1.5; }
 
 /* Ostrzeżenie „nie czekaj” — ramka jak w polityce prywatności */
 .sygnaly__uwaga {
@@ -739,7 +740,13 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .etap p { margin-top: 2px; }
 }
 @container (min-width: 620px) {
-  .sygnaly { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Kolumny czyta się z góry na dół: 1-5 po lewej, 6-10 po prawej,
+     zamiast skakania lewo-prawo po każdej pozycji. */
+  .sygnaly {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(5, min-content);
+    grid-auto-flow: column;
+  }
 }
 @container (min-width: 880px) {
   .kafle--liczby { grid-template-columns: repeat(4, minmax(0, 1fr)); }
