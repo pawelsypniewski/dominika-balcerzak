@@ -30,11 +30,17 @@ body {
 img { max-width: 100%; display: block; }
 
 a { color: var(--niebieski); text-decoration: none; }
-a:hover { color: var(--morski); }
+/* Najechanie na link NIE zmienia koloru liter — morski na bieli daje tylko 2,94:1.
+   Sygnał „to jest klikalne” niesie podkreślenie, więc kolor zostaje czytelny. */
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-::selection { background: var(--morski); color: var(--bialy); }
+::selection { background: var(--morski); color: var(--czarny); }   /* czarny na morskim: 7,14:1 */
 
-:focus-visible { outline: 3px solid var(--morski); outline-offset: 2px; }
+/* Obwódka klawiatury musi być widoczna na KAŻDYM tle strony. Morska znikała
+   na morskich kafelkach — czyli dokładnie na przycisku „Zarezerwuj wizytę online”.
+   Czarna działa na bieli (21:1) i na morskim (7,14:1); w ciemnej sekcji biała. */
+:focus-visible { outline: 3px solid var(--czarny); outline-offset: 2px; }
+.publikacje :focus-visible { outline-color: var(--bialy); }
 
 h1, h2, h3, p { margin: 0; }
 
@@ -135,14 +141,14 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   color: var(--czarny);
   white-space: nowrap;
 }
-.menu a:hover { color: var(--morski); }
+.menu a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
 .umow {
   padding: 0 20px;
   background: var(--niebieski);
   color: var(--bialy);
 }
-.umow:hover { background: var(--morski); color: var(--bialy); }
+.umow:hover { background: var(--morski); color: var(--czarny); }
 
 /* ---------- Siatka sekcji: 12 kolumn, podział 3 / 9 ---------- */
 
@@ -193,7 +199,24 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   gap: clamp(24px, 5svh, 48px);
 }
 
-.hero__nadtytul { color: var(--morski); margin-bottom: 28px; }
+/* Napis czarny, żeby był czytelny; morski akcent niesie kwadrat przed nim —
+   ten sam znak co przy nazwisku w nagłówku. Kwadrat wyrównany do pierwszego
+   wiersza, bo na telefonie napis łamie się na dwie linijki. */
+.hero__nadtytul {
+  color: var(--czarny);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.hero__nadtytul::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  background: var(--morski);
+  flex: none;
+}
 
 .hero__tytul {
   font-size: clamp(40px, 6.4vw, 92px);
@@ -311,7 +334,7 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
 .wyroznienie {
   background: var(--morski);
-  color: var(--bialy);
+  color: var(--czarny);
   padding: 24px;
   font-size: 17px;
   line-height: 1.45;
@@ -489,7 +512,7 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 
 .kafle > .placowka--akcja {
   background: var(--morski);
-  color: var(--bialy);
+  color: var(--czarny);
   justify-content: space-between;
   gap: 20px;
 }
@@ -787,9 +810,9 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   }
 
   .pasek-kontaktu__tel { color: var(--czarny); border-right: var(--linia); }
-  .pasek-kontaktu__tel:hover { color: var(--morski); }
+  .pasek-kontaktu__tel:hover { text-decoration: underline; text-underline-offset: 4px; }
   .pasek-kontaktu__umow { background: var(--niebieski); color: var(--bialy); }
-  .pasek-kontaktu__umow:hover { background: var(--morski); color: var(--bialy); }
+  .pasek-kontaktu__umow:hover { background: var(--morski); color: var(--czarny); }
 
   /* Hero */
   .hero__tekst { padding: 32px 0 28px; gap: 20px; }
