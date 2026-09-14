@@ -801,11 +801,8 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .sekcja__tresc { border-left: 0; padding: 0 0 48px; }
 }
 
-/* Elementy tylko dla telefonu — na większych ekranach schowane.
-   .sygnal-wiecej to pozycja listy, w której siedzi przycisk — na komputerze
-   znika razem z nim, żeby nie zostawiała pustego pola w siatce. */
+/* Elementy tylko dla telefonu — na większych ekranach schowane */
 .pasek-kontaktu,
-.sygnal-wiecej,
 .czytaj-wiecej { display: none; }
 
 /* ---------- Telefon: wersja uproszczona ----------
@@ -908,8 +905,10 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
     text-transform: uppercase;
     cursor: pointer;
   }
-  /* Pozycja listy z przyciskiem „Pokaż pozostałe sygnały” */
-  .js .sygnal-wiecej { display: block; padding: 16px 0; border-top: var(--linia); }
+  /* Przycisk pod listą sygnałów — kreska u góry domyka listę tak samo,
+     jak domykały ją kreski nad kolejnymi pozycjami */
+  .czytaj-wiecej--sygnaly { margin-top: 16px; }
+  .sygnaly { border-bottom: var(--linia); padding-bottom: 0; }
 
   .czytaj-wiecej::after { content: '↓'; font-size: 14px; }
   .czytaj-wiecej[aria-expanded="true"]::after { content: '↑'; }
