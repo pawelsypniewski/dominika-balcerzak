@@ -47,6 +47,24 @@ Sprawdzone na: iPhone SE–16 Pro Max (pionowo i poziomo), iPad mini / Air / Pro
 
 i otwórz http://localhost:8130/
 
+## Podgląd linku i znaczek strony
+
+- `zdjecia/podglad.jpg` — 1200×630, obrazek, który pokazuje się przy wklejeniu linku
+  na Facebooka, Instagrama, WhatsAppa i Messengera. Składany z portretu i nazwiska.
+- `favicon.svg` + `favicon-32.png` — znaczek w karcie przeglądarki.
+- `apple-touch-icon.png` — 180×180, ikona po dodaniu strony do ekranu głównego iPhone'a.
+- `404.html` — strona pokazywana pod nieistniejącym adresem.
+
+**Po podpięciu własnej domeny trzeba podmienić adresy w czterech miejscach:**
+
+1. `index.html` — `canonical`, `og:url`, `og:image`
+2. `polityka-prywatnosci.html` — `canonical`, `og:url`, `og:image`
+3. `404.html` — wszystkie adresy `/dominika-balcerzak/...` zamienić na `/...`
+4. plik `CNAME` w katalogu głównym (tworzy go GitHub przy ustawianiu domeny)
+
+Podmiana obrazka podglądu: zmień `kafelek.html` w materiałach roboczych albo poproś
+o nowy — musi mieć dokładnie 1200×630 px, inaczej Facebook przytnie go po swojemu.
+
 ## Do uzupełnienia
 
 - lista publikacji (na razie trzy wiersze-zaślepki „20__”)
