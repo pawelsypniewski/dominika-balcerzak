@@ -56,6 +56,23 @@ h1, h2, h3, p { margin: 0; }
 /* Sekcje przewijane z menu nie chowają się pod przyklejonym nagłówkiem */
 section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
+/* Link „Przejdź do treści” — dla osób, które poruszają się po stronie klawiaturą.
+   Schowany nad górną krawędzią ekranu, zjeżdża w dół dopiero przy fokusie. */
+.pomin {
+  position: fixed;
+  top: 0;
+  left: 12px;
+  z-index: 100;
+  transform: translateY(-120%);
+  padding: 12px 18px;
+  background: var(--czarny);
+  color: var(--bialy);
+  font-weight: 700;
+  text-decoration: none;
+}
+.pomin:focus { transform: translateY(0); }
+.pomin:hover { text-decoration: underline; text-underline-offset: 4px; }
+
 /* ---------- Drobne elementy typograficzne ---------- */
 
 .etykieta {

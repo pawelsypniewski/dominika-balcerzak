@@ -43,6 +43,10 @@
 </head>
 <body>
 
+<!-- Link dla klawiatury: niewidoczny, aż ktoś naciśnie Tab jako pierwszy.
+     Pozwala pominąć nagłówek i menu i wejść prosto w treść. -->
+<a class="pomin" href="#gora">Przejdź do treści</a>
+
 <header class="naglowek">
   <div class="kontener naglowek__wnetrze">
     <a class="logo" href="#gora">
@@ -79,12 +83,18 @@
       </div>
       <div class="hero__zdjecie">
         <div class="zdjecie">
-          <!-- Przeglądarka sama wybiera wielkość pliku: 800 px dla zwykłych ekranów,
-               1200 px dla Retiny i telefonów -->
-          <img src="zdjecia/portret.jpg" width="1200" height="1500" fetchpriority="high"
-               srcset="zdjecia/portret-800.jpg 800w, zdjecia/portret.jpg 1200w"
-               sizes="(max-width: 900px) 100vw, (max-width: 1279px) 50vw, 563px"
-               alt="Lek. wet. Dominika Balcerzak w gabinecie Przychodni Weterynaryjnej Kochanowskiego">
+          <!-- Przeglądarka sama wybiera format i wielkość: WebP, jeśli umie (kilka razy
+               lżejszy), inaczej JPEG. 800 px dla zwykłych ekranów, 1200 px dla Retiny
+               i telefonów. Przy podmianie zdjęcia trzeba odtworzyć wszystkie cztery pliki. -->
+          <picture>
+            <source type="image/webp"
+                    srcset="zdjecia/portret-800.webp 800w, zdjecia/portret.webp 1200w"
+                    sizes="(max-width: 900px) 100vw, (max-width: 1279px) 50vw, 563px">
+            <img src="zdjecia/portret.jpg" width="1200" height="1500" fetchpriority="high"
+                 srcset="zdjecia/portret-800.jpg 800w, zdjecia/portret.jpg 1200w"
+                 sizes="(max-width: 900px) 100vw, (max-width: 1279px) 50vw, 563px"
+                 alt="Lek. wet. Dominika Balcerzak w gabinecie Przychodni Weterynaryjnej Kochanowskiego">
+          </picture>
         </div>
       </div>
     </div>
@@ -184,9 +194,9 @@
 
         <!-- Zdjęcia Pacjentów (poziome 3:2) — na telefonie przewijane palcem w bok -->
         <div class="kafle kafle--zdjecia">
-          <div><div class="zdjecie"><img src="zdjecia/pacjent-1-kot.jpg" width="1500" height="998" loading="lazy" srcset="zdjecia/pacjent-1-kot-800.jpg 800w, zdjecia/pacjent-1-kot.jpg 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px" alt="Starszy pręgowany kot zawinięty w miękki kocyk"></div></div>
-          <div><div class="zdjecie"><img src="zdjecia/pacjent-2-bernenczyk.jpg" width="1500" height="998" loading="lazy" srcset="zdjecia/pacjent-2-bernenczyk-800.jpg 800w, zdjecia/pacjent-2-bernenczyk.jpg 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px" alt="Berneński pies pasterski z siwiejącym pyskiem"></div></div>
-          <div><div class="zdjecie"><img src="zdjecia/pacjent-3-owczarek.jpg" width="1500" height="998" loading="lazy" srcset="zdjecia/pacjent-3-owczarek-800.jpg 800w, zdjecia/pacjent-3-owczarek.jpg 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px" alt="Owczarek niemiecki senior leżący spokojnie na kocu podczas wizyty"></div></div>
+          <div><div class="zdjecie"><picture><source type="image/webp" srcset="zdjecia/pacjent-1-kot-800.webp 800w, zdjecia/pacjent-1-kot.webp 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px"><img src="zdjecia/pacjent-1-kot.jpg" width="1500" height="998" loading="lazy" srcset="zdjecia/pacjent-1-kot-800.jpg 800w, zdjecia/pacjent-1-kot.jpg 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px" alt="Starszy pręgowany kot zawinięty w miękki kocyk"></picture></div></div>
+          <div><div class="zdjecie"><picture><source type="image/webp" srcset="zdjecia/pacjent-2-bernenczyk-800.webp 800w, zdjecia/pacjent-2-bernenczyk.webp 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px"><img src="zdjecia/pacjent-2-bernenczyk.jpg" width="1500" height="998" loading="lazy" srcset="zdjecia/pacjent-2-bernenczyk-800.jpg 800w, zdjecia/pacjent-2-bernenczyk.jpg 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px" alt="Berneński pies pasterski z siwiejącym pyskiem"></picture></div></div>
+          <div><div class="zdjecie"><picture><source type="image/webp" srcset="zdjecia/pacjent-3-owczarek-800.webp 800w, zdjecia/pacjent-3-owczarek.webp 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px"><img src="zdjecia/pacjent-3-owczarek.jpg" width="1500" height="998" loading="lazy" srcset="zdjecia/pacjent-3-owczarek-800.jpg 800w, zdjecia/pacjent-3-owczarek.jpg 1500w" sizes="(max-width: 720px) 80vw, (max-width: 900px) 33vw, (max-width: 1440px) 25vw, 335px" alt="Owczarek niemiecki senior leżący spokojnie na kocu podczas wizyty"></picture></div></div>
         </div>
       </div>
     </div>
