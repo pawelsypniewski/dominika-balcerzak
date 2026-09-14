@@ -384,6 +384,33 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 .kafle--zdjecia { margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
 .kafle--zdjecia > * { position: relative; height: 220px; }
 
+/* ---------- Wybrane kursy i szkolenia ---------- */
+
+.kursy__wstep { margin-bottom: 36px; max-width: 40ch; }
+
+.kursy { list-style: none; margin: 0; padding: 0; }
+
+.kurs {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 0 16px;
+  padding: 20px 0;
+  border-top: var(--linia);
+}
+.kurs:last-child { border-bottom: var(--linia); }
+
+.kurs__rok { font-size: 15px; font-weight: 700; }
+.kurs__tytul { font-size: 19px; line-height: 1.3; letter-spacing: -0.015em; }
+.kurs__organizator { margin-top: 6px; font-size: 15px; color: #555; }
+
+.kursy__uwaga {
+  margin-top: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+  max-width: 60ch;
+}
+
 /* ---------- Publikacje (ciemna sekcja) ---------- */
 
 .publikacje { background: var(--czarny); color: var(--bialy); }
@@ -543,6 +570,29 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+/* Ikony Facebooka i Instagrama */
+.spolecznosciowe { display: flex; gap: 10px; }
+
+.spolecznosciowe a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--bialy);
+  box-shadow: inset 0 0 0 2px var(--bialy);
+}
+.spolecznosciowe a:hover { background: var(--bialy); color: var(--niebieski); }
+
+.spolecznosciowe svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .stopka__menu a { color: var(--bialy); }
 .stopka__menu a:hover,
 .stopka__menu a[aria-current="page"] { color: var(--bialy); text-decoration: underline; text-underline-offset: 4px; }
@@ -821,6 +871,11 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .kafle--zdjecia::-webkit-scrollbar { display: none; }
   .kafle--zdjecia > * { flex: 0 0 78%; height: 200px; scroll-snap-align: start; }
 
+  /* Kursy i szkolenia */
+  .kursy__wstep { margin-bottom: 20px; }
+  .kurs { grid-template-columns: 56px minmax(0, 1fr); padding: 16px 0; }
+  .kurs__tytul { font-size: 17px; }
+
   /* Publikacje */
   .publikacje__glowka,
   .publikacja { grid-template-columns: 56px minmax(0, 1fr); }
@@ -838,6 +893,7 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 
   /* Stopka */
   .stopka__wnetrze { padding-top: 28px; padding-bottom: 28px; }
+  .spolecznosciowe { order: 1; }
 
   /* Polityka prywatności */
   .dokument { padding: 36px 0 48px; }
