@@ -962,6 +962,10 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   /* Kursy i szkolenia */
   .kursy__wstep { margin-bottom: 20px; }
   .kurs { padding: 16px 0; }
+  /* Dolna kreska na liście, a nie na ostatnim kursie — ostatni bywa schowany */
+  .kursy { border-bottom: var(--linia); }
+  .kurs:last-child { border-bottom: 0; }
+  .czytaj-wiecej--kursy { margin-top: 16px; }
   .kurs__tytul { font-size: 17px; }
 
   /* Publikacje */

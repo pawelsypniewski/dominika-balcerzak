@@ -38,8 +38,8 @@
   <meta property="profile:first_name" content="Dominika">
   <meta property="profile:last_name" content="Balcerzak">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="style.css?v=20260917">
-  <script src="skrypt.js?v=20260917"></script>
+  <link rel="stylesheet" href="style.css?v=20260917b">
+  <script src="skrypt.js?v=20260917b"></script>
 </head>
 <body>
 
@@ -266,23 +266,27 @@
             <div class="kurs__tytul">Endokrynologia weterynaryjna z dr Ewą Zwierzyńską</div>
             <div class="kurs__organizator">Akademia Wet dr Miłosława Kwiatkowska</div>
           </li>
-          <li class="kurs">
+          <li class="kurs zwijane" data-grupa="kursy">
             <div class="kurs__tytul">Kurs podstawowy z dermatologii weterynaryjnej</div>
             <div class="kurs__organizator">Akademia Dermatologii dr n. wet. Dorota Pomorska-Handwerker</div>
           </li>
-          <li class="kurs">
+          <li class="kurs zwijane" data-grupa="kursy">
             <div class="kurs__tytul">Otologia kliniczna psów i kotów</div>
             <div class="kurs__organizator">Dermwet Edu</div>
           </li>
-          <li class="kurs">
+          <li class="kurs zwijane" data-grupa="kursy">
             <div class="kurs__tytul">Seminarium hemato-onkologiczne</div>
             <div class="kurs__organizator">Redline, Łazy</div>
           </li>
-          <li class="kurs">
+          <li class="kurs zwijane" data-grupa="kursy">
             <div class="kurs__tytul">Hematologia kliniczna</div>
             <div class="kurs__organizator">Therios, Myślenice</div>
           </li>
         </ul>
+
+        <!-- Na telefonie widać 3 pierwsze kursy, reszta chowa się pod tym przyciskiem
+             (ten sam mechanizm co w „Kiedy przyjść”). -->
+        <button class="czytaj-wiecej czytaj-wiecej--kursy" type="button" aria-expanded="false" data-grupa="kursy">Pokaż pozostałe kursy</button>
       </div>
     </div>
   </section>
