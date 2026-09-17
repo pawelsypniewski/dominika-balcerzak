@@ -835,14 +835,21 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .logo__podpis { font-size: 10px; }
   .umow { display: none; }
 
+  /* Menu mieści się w całości, bez przewijania w bok: pozycje rozkładają
+     się na całą szerokość, a napisy zmniejszają się razem z ekranem
+     (12 px na zwykłym telefonie, 10 px na najwęższym, 320 px) */
   .menu {
     border-top: var(--linia);
-    overflow-x: auto;
-    scrollbar-width: none;
+    justify-content: space-between;
+    /* Na szerszych ekranach (np. telefon poziomo) menu nie rozjeżdża się
+       na całą szerokość — kończy się najdalej na 520 px */
+    padding: 0 max(16px, calc(100% - 520px)) 0 16px;
   }
-  .menu::-webkit-scrollbar { display: none; }
-  .menu a { padding: 12px 14px; }
-  .menu a:first-child { padding-left: 24px; }
+  .menu a {
+    padding: 12px 4px;
+    font-size: clamp(10px, 3.1vw, 12px);
+    letter-spacing: 0.04em;
+  }
 
   /* Pasek kontaktu przyklejony do dołu ekranu */
   .pasek-kontaktu {
