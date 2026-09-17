@@ -9,6 +9,36 @@
   --linia: 2px solid var(--czarny);
   --szerokosc: 1400px;
   --wysokosc-naglowka: 64px;
+
+  /* ===== System typografii =====
+     Każdy tekst na stronie należy do jednej z tych ról. Nowy element =
+     wybierz rolę, nie wymyślaj nowej wielkości.
+     1. Nazwisko na pierwszym ekranie  — .hero__tytul (jedyne takie)
+     2. Tytuł       — nagłówki sekcji, tytuł podstrony, nazwisko w stopce
+     3. Podtytuł    — „Kim jestem?”, rozdziały polityki prywatności
+     4. Wstęp       — pierwszy akapit sekcji, hasło pod nazwiskiem
+     5. Liczba      — 2009, 2017… i numery kroków
+     6. Tytuł karty — kafelki, kroki, sygnały, kursy, placówka
+     7. Tekst       — zwykłe akapity, ramki, dane kontaktowe
+     8. Tekst drobny — opisy w kafelkach i na listach, adres
+     9. Etykieta    — WERSALIKI pogrubione: „Jak pracuję”, „Bielany”, „E-mail”
+    10. Przycisk / menu — WERSALIKI pogrubione, ciaśniej
+    11. Podpis      — WERSALIKI zwykłe: opisy pod liczbami, stopka */
+  --t-tytul: clamp(28px, 3vw, 44px);
+  --t-podtytul: clamp(22px, 2.2vw, 30px);
+  --t-wstep: clamp(18px, 1.8vw, 24px);
+  --t-liczba: 24px;
+  --t-karta: 19px;
+  --t-tekst: 16px;
+  --t-drobny: 15px;
+  --t-etykieta: 12px;
+  --t-przycisk: 13px;
+
+  /* Odstępy powtarzane w sekcjach */
+  --odstep-wstep: 32px;     /* pod pierwszym akapitem sekcji */
+  --odstep-blok: 40px;      /* między blokami w sekcji */
+  --kafel: 24px;            /* wnętrze kafelka i ramki */
+  --szary: #555;            /* tekst drugiego planu */
 }
 
 *,
@@ -75,25 +105,90 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
 /* ---------- Drobne elementy typograficzne ---------- */
 
-.etykieta {
-  font-size: 12px;
+/* 9. Etykieta */
+.etykieta,
+.placowka__miejsce,
+.dane__nazwa,
+.publikacje__glowka {
+  font-size: var(--t-etykieta);
   font-weight: 700;
-  letter-spacing: 0.14em;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+/* 11. Podpis */
+.liczba-opis,
+.stopka__podpis,
+.stopka__menu,
+.publikacja__typ {
+  font-size: var(--t-etykieta);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* 6. Tytuł karty */
+.obszar h3,
+.etap__nazwa,
+.sygnal b,
+.kurs__tytul,
+.placowka h3,
+.publikacja__tytul {
+  margin: 0;
+  font-size: var(--t-karta);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+/* 8. Tekst drobny */
+.obszar p,
+.etap p,
+.sygnal span,
+.kurs__organizator,
+.placowka address,
+.placowka--akcja p,
+.publikacja__zrodlo,
+.dokument__data {
+  font-size: var(--t-drobny);
+  line-height: 1.55;
+}
+
+/* 5. Liczba */
+.liczba,
+.etap__numer {
+  font-size: var(--t-liczba);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* 3. Podtytuł */
+.kim-jestem h3,
+.dokument h2 {
+  font-size: var(--t-podtytul);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
 }
 
 .belka { margin-top: 20px; width: 56px; height: 8px; background: var(--morski); }
 .belka--niebieska { background: var(--niebieski); }
 
+/* 4. Wstęp */
 .prowadzacy {
-  font-size: clamp(18px, 1.8vw, 24px);
+  margin-bottom: var(--odstep-wstep);
+  max-width: 44ch;
+  font-size: var(--t-wstep);
   line-height: 1.35;
   letter-spacing: -0.015em;
   text-wrap: pretty;
 }
 
+/* 7. Tekst */
 .tekst {
-  font-size: 16px;
+  font-size: var(--t-tekst);
   line-height: 1.6;
   text-wrap: pretty;
 }
@@ -146,12 +241,13 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
 .menu { display: flex; align-items: stretch; }
 
+/* 10. Przycisk / menu */
 .menu a,
 .umow {
   display: flex;
   align-items: center;
   padding: 0 18px;
-  font-size: 12px;
+  font-size: var(--t-etykieta);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -166,7 +262,7 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   align-items: center;
   padding: 0 18px;
   border-left: var(--linia);
-  font-size: 12px;
+  font-size: var(--t-etykieta);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--czarny);
@@ -196,8 +292,11 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
 .sekcja__bok-przyklejony { position: sticky; top: 96px; }
 
-.sekcja__tytul {
-  font-size: clamp(28px, 3vw, 44px);
+/* 2. Tytuł */
+.sekcja__tytul,
+.dokument h1,
+.stopka__nazwa {
+  font-size: var(--t-tytul);
   line-height: 1;
   letter-spacing: -0.03em;
   font-weight: 700;
@@ -261,9 +360,9 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 .hero__haslo {
   margin-top: 22px;
   max-width: 30ch;
-  font-size: clamp(19px, 1.9vw, 25px);
+  font-size: var(--t-wstep);
   line-height: 1.3;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   font-weight: 700;
   text-wrap: balance;
 }
@@ -278,8 +377,8 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
 .hero__opis {
   max-width: 46ch;
-  font-size: 17px;
-  line-height: 1.5;
+  font-size: var(--t-tekst);
+  line-height: 1.6;
   text-wrap: pretty;
 }
 
@@ -332,15 +431,6 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
 /* ---------- O mnie ---------- */
 
-.o-mnie__wstep {
-  margin-bottom: 24px;
-  font-size: clamp(20px, 2vw, 28px);
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-  max-width: 34ch;
-  font-weight: 700;
-  text-wrap: pretty;
-}
 
 .dwie-kolumny {
   display: grid;
@@ -348,26 +438,20 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   gap: 40px;
 }
 
-.dwie-kolumny + .kim-jestem { margin-top: 48px; }
+.dwie-kolumny + .kim-jestem { margin-top: var(--odstep-blok); }
 
 .stos { display: flex; flex-direction: column; gap: 20px; }
 
 .kim-jestem { border-top: var(--linia); padding-top: 32px; }
 
-.kim-jestem h3 {
-  margin-bottom: 24px;
-  font-size: clamp(24px, 2.4vw, 34px);
-  line-height: 1;
-  letter-spacing: -0.025em;
-  font-weight: 700;
-}
+.kim-jestem h3 { margin-bottom: 24px; }
 
 .wyroznienie {
   background: var(--morski);
   color: var(--czarny);
-  padding: 24px;
-  font-size: 17px;
-  line-height: 1.45;
+  padding: var(--kafel);
+  font-size: var(--t-tekst);
+  line-height: 1.6;
   font-weight: 700;
   text-wrap: pretty;
 }
@@ -385,26 +469,18 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
   box-shadow: 0 0 0 1px var(--czarny);
 }
 
-.kafle--liczby { margin-top: 40px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.kafle--liczby > * { padding: 20px; }
+.kafle--liczby { margin-top: var(--odstep-blok); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kafle--liczby > * { padding: var(--kafel); }
 
-.liczba { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
-
-.liczba-opis {
-  margin-top: 8px;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+.liczba-opis { margin-top: 8px; }
 
 /* ---------- Moi Pacjenci ---------- */
 
-.pacjenci__wstep { margin-bottom: 36px; max-width: 40ch; }
 
 .kafle--obszary { grid-template-columns: minmax(0, 1fr); }
 
 .obszar {
-  padding: 24px;
+  padding: var(--kafel);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -413,10 +489,9 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 .obszar__znak { width: 18px; height: 18px; background: var(--morski); }
 .obszar__znak--niebieski { background: var(--niebieski); }
 
-.obszar h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.015em; }
-.obszar p { font-size: 15px; line-height: 1.55; }
 
-.etapy-blok { margin-top: 40px; border-top: var(--linia); padding-top: 28px; }
+
+.etapy-blok { margin-top: var(--odstep-blok); border-top: var(--linia); padding-top: 28px; }
 .etapy-blok .etykieta { margin-bottom: 20px; }
 
 .etapy {
@@ -431,18 +506,15 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 .etap { border-top: 6px solid var(--morski); padding-top: 14px; }
 .etap--niebieski { border-top-color: var(--niebieski); }
 
-/* Numer jak liczby w kafelkach O mnie (2009, 2017…), nazwa jak nagłówki
-   kafelków Moi Pacjenci — ten sam język co reszta strony */
-.etap__numer { display: block; font-size: 24px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
-.etap__nazwa { margin: 12px 0 0; font-size: 19px; font-weight: 700; line-height: 1.25; letter-spacing: -0.015em; }
-.etap p { margin-top: 8px; font-size: 15px; line-height: 1.55; }
+.etap__numer { display: block; }
+.etap__nazwa { margin-top: 12px; }
+.etap p { margin-top: 8px; }
 
-.kafle--zdjecia { margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
+.kafle--zdjecia { margin-top: var(--odstep-blok); grid-template-columns: minmax(0, 1fr); }
 .kafle--zdjecia > * { position: relative; height: 220px; }
 
 /* ---------- Wybrane kursy i szkolenia ---------- */
 
-.kursy__wstep { margin-bottom: 36px; max-width: 40ch; }
 
 .kursy { list-style: none; margin: 0; padding: 0; }
 
@@ -452,8 +524,7 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 }
 .kurs:last-child { border-bottom: var(--linia); }
 
-.kurs__tytul { font-size: 19px; line-height: 1.3; letter-spacing: -0.015em; }
-.kurs__organizator { margin-top: 6px; font-size: 15px; color: #555; }
+.kurs__organizator { margin-top: 6px; color: var(--szary); }
 
 
 /* ---------- Publikacje (ciemna sekcja) ---------- */
@@ -471,9 +542,6 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 
 .publikacje__glowka {
   padding: 12px 0;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--morski);
 }
 
@@ -485,31 +553,24 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 .publikacja:last-of-type { border-bottom: 1px solid var(--bialy); }
 a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 
-.publikacja__rok { font-size: 15px; font-weight: 700; }
+.publikacja__rok { font-size: var(--t-drobny); font-weight: 700; }
 .publikacja__opis { padding-right: 24px; }
-.publikacja__tytul { font-size: 19px; line-height: 1.3; letter-spacing: -0.015em; }
-.publikacja__zrodlo { margin-top: 6px; font-size: 14px; color: var(--morski); }
+.publikacja__zrodlo { margin-top: 6px; color: var(--morski); }
 
 .do-prawej { text-align: right; }
 
-.publikacja__typ {
-  text-align: right;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+.publikacja__typ { text-align: right; }
 
 .publikacje__uwaga {
   margin-top: 24px;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: var(--t-drobny);
+  line-height: 1.55;
   color: var(--morski);
   max-width: 60ch;
 }
 
 /* ---------- Kiedy się zgłosić ---------- */
 
-.kiedy__wstep { margin-bottom: 8px; max-width: 46ch; }
 
 .sygnaly {
   list-style: none;
@@ -537,16 +598,16 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   background: var(--morski);
   grid-row: span 2;   /* kwadrat obok obu wierszy, hasło i opis jeden pod drugim */
 }
-.sygnal b { font-size: 18px; font-weight: 700; letter-spacing: -0.015em; }
-.sygnal span { display: block; margin-top: 7px; font-size: 15px; line-height: 1.5; }
+.sygnal b { display: block; }
+.sygnal span { display: block; margin-top: 4px; }
 
 /* Ostrzeżenie „nie czekaj” — ramka jak w polityce prywatności */
 .sygnaly__uwaga {
-  margin-top: 32px;
-  padding: 20px;
+  margin-top: var(--odstep-blok);
+  padding: var(--kafel);
   border: var(--linia);
   border-left: 10px solid var(--morski);
-  font-size: 15px;
+  font-size: var(--t-tekst);
   line-height: 1.6;
   max-width: 70ch;
 }
@@ -554,28 +615,17 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 
 /* ---------- Umów się ---------- */
 
-.kontakt__wstep { margin-bottom: 32px; max-width: 44ch; }
 
 .kafle--placowki { grid-template-columns: minmax(0, 1fr); }
 
 .placowka {
-  padding: 28px;
+  padding: var(--kafel);
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.placowka__miejsce {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--niebieski);
-}
-
-.placowka h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
-
-.placowka address { font-style: normal; font-size: 15px; line-height: 1.6; }
+.placowka address { font-style: normal; }
 
 .kafle > .placowka--akcja {
   background: var(--morski);
@@ -584,14 +634,13 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   gap: 20px;
 }
 
-.placowka--akcja p { font-size: 15px; line-height: 1.55; }
 
 .przycisk {
   display: inline-block;
   background: var(--czarny);
   color: var(--bialy);
   padding: 16px 20px;
-  font-size: 14px;
+  font-size: var(--t-przycisk);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -614,15 +663,9 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   border-top: 0;
   grid-template-columns: minmax(0, 1fr);
 }
-.kafle--dane > * { padding: 20px; }
+.kafle--dane > * { padding: var(--kafel); }
 
-.dane__nazwa {
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--niebieski);
-}
-.dane__wartosc { margin-top: 8px; font-size: 16px; overflow-wrap: anywhere; }
+.dane__wartosc { margin-top: 8px; font-size: var(--t-tekst); line-height: 1.6; overflow-wrap: anywhere; }
 
 /* ---------- Stopka ---------- */
 
@@ -638,28 +681,9 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   align-items: flex-end;
 }
 
-.stopka__nazwa {
-  font-size: clamp(24px, 3vw, 40px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
+.stopka__podpis { margin-top: 8px; }
 
-.stopka__podpis {
-  margin-top: 8px;
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.stopka__menu {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+.stopka__menu { display: flex; flex-wrap: wrap; gap: 20px; }
 /* Ikony Facebooka i Instagrama */
 .spolecznosciowe { display: flex; gap: 10px; }
 
@@ -694,19 +718,12 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   padding: 56px 0 72px;
 }
 
-.dokument h1 {
-  font-size: clamp(34px, 5vw, 56px);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-weight: 700;
-}
-
-.dokument__data { margin-top: 14px; font-size: 14px; color: #555; }
+.dokument__data { margin-top: 14px; color: var(--szary); }
 
 /* Najważniejsze w skrócie — ramka w stylu kafelków strony głównej */
 .dokument__skrot {
   margin-top: 32px;
-  padding: 24px;
+  padding: var(--kafel);
   border: var(--linia);
   border-left: 10px solid var(--morski);
   font-weight: 700;
@@ -717,14 +734,10 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   margin-top: 44px;
   padding-top: 20px;
   border-top: var(--linia);
-  font-size: clamp(20px, 2.4vw, 26px);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  font-weight: 700;
 }
 
 .dokument p,
-.dokument li { font-size: 16px; line-height: 1.65; text-wrap: pretty; }
+.dokument li { font-size: var(--t-tekst); line-height: 1.6; text-wrap: pretty; }
 .dokument p { margin-top: 14px; }
 .dokument ul { margin: 14px 0 0; padding-left: 22px; }
 .dokument li + li { margin-top: 6px; }
@@ -768,8 +781,8 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
     padding: 2px 0 2px 14px;
   }
   .etap--niebieski { border-left-color: var(--niebieski); }
-  .etap__numer { grid-row: span 2; font-size: 17px; line-height: 1.25; }
-  .etap__nazwa { margin-top: 0; font-size: 17px; }
+  .etap__numer { grid-row: span 2; font-size: var(--t-karta); line-height: 1.3; }
+  .etap__nazwa { margin-top: 0; }
   .etap p { grid-column: 2; margin-top: 2px; }
 }
 @container (min-width: 620px) {
@@ -857,6 +870,15 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
    dłuższy życiorys chowa się pod „Czytaj więcej”. */
 
 @media (max-width: 720px) {
+  /* System typografii i odstępów na telefonie — reszta reguł korzysta z tych zmiennych */
+  :root {
+    --t-liczba: 20px;
+    --t-karta: 17px;
+    --odstep-wstep: 20px;
+    --odstep-blok: 28px;
+    --kafel: 16px;
+  }
+
   /* Miejsce na pasek kontaktu: 56 px przycisków + 2 px linii */
   body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
 
@@ -910,7 +932,7 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
     align-items: center;
     justify-content: center;
     min-height: 56px;
-    font-size: 13px;
+    font-size: var(--t-przycisk);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -925,7 +947,6 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .hero__tekst { padding: 32px 0 28px; gap: 20px; }
   .hero__nadtytul { margin-bottom: 16px; }
   .hero__pasek { margin-top: 18px; height: 10px; }
-  .hero__opis { font-size: 16px; }
 
   /* Nagłówki sekcji — mniej pustego miejsca */
   .sekcja__bok { padding: 28px 0 16px; }
@@ -934,13 +955,10 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .sekcja__tresc { padding-bottom: 36px; }
 
   /* O mnie */
-  .o-mnie__wstep { font-size: 20px; margin-bottom: 16px; }
   .dwie-kolumny { gap: 16px; }
-  .dwie-kolumny + .kim-jestem { margin-top: 28px; }
   .kim-jestem { padding-top: 24px; }
   .kim-jestem h3 { margin-bottom: 16px; }
   .stos { gap: 16px; }
-  .wyroznienie { padding: 20px; font-size: 16px; }
 
   /* Akapity schowane pod „Czytaj więcej”, dopóki ktoś nie kliknie
      (skrypt dodaje im klasę „pokazane”) */
@@ -957,7 +975,7 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
     background: var(--bialy);
     color: var(--czarny);
     font: inherit;
-    font-size: 12px;
+    font-size: var(--t-przycisk);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -971,32 +989,24 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .czytaj-wiecej::after { content: '↓'; font-size: 14px; }
   .czytaj-wiecej[aria-expanded="true"]::after { content: '↑'; }
 
-  .kafle--liczby { grid-template-columns: 1fr 1fr; margin-top: 28px; }
-  .kafle--liczby > * { padding: 14px; }
-  .liczba { font-size: 24px; }
+  .kafle--liczby { grid-template-columns: 1fr 1fr; }
 
   /* Moi Pacjenci */
-  .pacjenci__wstep { margin-bottom: 20px; }
-
   .obszar {
-    padding: 16px;
     display: grid;
     grid-template-columns: 14px minmax(0, 1fr);
     column-gap: 12px;
     row-gap: 6px;
   }
   .obszar__znak { width: 14px; height: 14px; margin-top: 4px; }
-  .obszar h3 { font-size: 17px; }
-  .obszar p { grid-column: 2; font-size: 14px; }
+  .obszar p { grid-column: 2; }
 
-  .etapy-blok { margin-top: 28px; padding-top: 20px; }
+  .etapy-blok { padding-top: 20px; }
   .etapy { grid-template-columns: 1fr; gap: 14px; }
-  .etap p { font-size: 14px; }
 
   /* Zdjęcia Pacjentów: jeden rząd przewijany palcem w bok */
   .kafle--zdjecia {
     display: flex;
-    margin-top: 28px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -1005,28 +1015,22 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .kafle--zdjecia > * { flex: 0 0 78%; height: 200px; scroll-snap-align: start; }
 
   /* Kursy i szkolenia */
-  .kursy__wstep { margin-bottom: 20px; }
   .kurs { padding: 16px 0; }
   /* Dolna kreska na liście, a nie na ostatnim kursie — ostatni bywa schowany */
   .kursy { border-bottom: var(--linia); }
   .kurs:last-child { border-bottom: 0; }
   .czytaj-wiecej--kursy { margin-top: 16px; }
-  .kurs__tytul { font-size: 17px; }
 
   /* Publikacje */
   .publikacje__glowka,
   .publikacja { grid-template-columns: 56px minmax(0, 1fr); }
   .publikacje__glowka > :last-child { display: none; }
   .publikacja { padding: 16px 0; }
-  .publikacja__tytul { font-size: 17px; }
   .publikacja__typ { grid-column: 2; text-align: left; margin-top: 8px; }
   .publikacja__opis { padding-right: 0; }
 
   /* Umów się */
-  .kontakt__wstep { margin-bottom: 20px; }
-  .placowka { padding: 20px; gap: 10px; }
-  .placowka h3 { font-size: 19px; }
-  .kafle--dane > * { padding: 16px 20px; }
+  .placowka { gap: 10px; }
 
   /* Stopka */
   .stopka__wnetrze { padding-top: 28px; padding-bottom: 28px; }
@@ -1034,7 +1038,8 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
 
   /* Polityka prywatności */
   .dokument { padding: 36px 0 48px; }
-  .dokument__skrot { padding: 20px; border-left-width: 8px; }
+  .dokument__skrot,
+  .sygnaly__uwaga { border-left-width: 8px; }
   .dokument h2 { margin-top: 36px; }
 }
 

@@ -18,6 +18,14 @@ Podmiana zdjęcia: nowy plik pod tą samą nazwą w `zdjecia/` **i nowa kopia 80
 
     sips --resampleWidth 800 -s formatOptions 80 zdjecia/portret.jpg --out zdjecia/portret-800.jpg
 
+## Typografia i odstępy
+
+Cała strona korzysta z jednego systemu zapisanego na górze `style.css` (zmienne `--t-…`,
+`--odstep-…`, `--kafel`). Każdy tekst ma jedną z 11 ról: nazwisko, tytuł, podtytuł, wstęp,
+liczba, tytuł karty, tekst, tekst drobny, etykieta, przycisk/menu, podpis. Dodając nowy
+element, przypisz mu rolę zamiast wpisywać nową wielkość. Wersja na telefon zmienia
+tylko wartości zmiennych (blok `:root` w `@media (max-width: 720px)`).
+
 ## Wersja angielska
 
 - Adres: `/en/`. Przełącznik **EN / PL** w nagłówku (obok „Umów się”) i link „English / Polski” w stopce
