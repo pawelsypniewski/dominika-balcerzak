@@ -3,7 +3,8 @@
 Jednostronicowa wizytówka przeniesiona z projektu Claude Design
 („Dominika Balcerzak.dc.html”). Zwykły HTML + CSS + jeden mały skrypt.
 
-- `index.html` — cała treść strony
+- `index.html` — cała treść strony (po polsku)
+- `en/index.html`, `en/privacy-policy.html` — wersja angielska (te same style, zdjęcia i skrypt przez `../`)
 - `style.css` — wygląd (kolory na górze pliku, wersja na telefon na dole)
 - `skrypt.js` — „Czytaj więcej” na telefonie i składanie adresu e-mail
 - `zdjecia/` — zdjęcia; oryginały leżą w `Praca/Strona Internetowa dominika/gotowe/`
@@ -16,6 +17,16 @@ Podmiana zdjęcia: nowy plik pod tą samą nazwą w `zdjecia/` **i nowa kopia 80
 (inaczej część ekranów pokaże stare zdjęcie):
 
     sips --resampleWidth 800 -s formatOptions 80 zdjecia/portret.jpg --out zdjecia/portret-800.jpg
+
+## Wersja angielska
+
+- Adres: `/en/`. Przełącznik **EN / PL** w nagłówku (obok „Umów się”) i link „English / Polski” w stopce
+  prowadzą do tej samej strony w drugim języku.
+- **Każda zmiana treści po polsku = ta sama zmiana w `en/`.** Nazwy klas i kotwic (`#o-mnie`, `#kiedy`…)
+  są wspólne, więc wystarczy podmienić tekst.
+- W `<head>` każdej strony są linki `hreflang` (pl / en / x-default) — przy zmianie domeny też do podmiany.
+- Napis „Zwiń” / „Show less” skrypt wybiera według `<html lang>`.
+- Do 900 px nagłówek ma dwa wiersze (logo + PL/EN + „Umów się”, pod spodem menu).
 
 ## Ekrany
 
@@ -57,8 +68,8 @@ i otwórz http://localhost:8130/
 
 **Po podpięciu własnej domeny trzeba podmienić adresy w czterech miejscach:**
 
-1. `index.html` — `canonical`, `og:url`, `og:image`
-2. `polityka-prywatnosci.html` — `canonical`, `og:url`, `og:image`
+1. `index.html` i `en/index.html` — `canonical`, `hreflang`, `og:url`, `og:image`
+2. `polityka-prywatnosci.html` i `en/privacy-policy.html` — `canonical`, `hreflang`, `og:url`, `og:image`
 3. `404.html` — wszystkie adresy `/dominika-balcerzak/...` zamienić na `/...`
 4. plik `CNAME` w katalogu głównym (tworzy go GitHub przy ustawianiu domeny)
 

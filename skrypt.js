@@ -8,6 +8,9 @@ document.documentElement.classList.add('js');
 document.addEventListener('DOMContentLoaded', function () {
   // „Czytaj więcej” w sekcji O mnie (na telefonie). Każdy przycisk pokazuje
   // tylko akapity ze swojej grupy — tej samej wartości data-grupa.
+  // Napis „Zwiń” w języku strony (<html lang="…">)
+  var zwin = document.documentElement.lang === 'en' ? 'Show less' : 'Zwiń';
+
   document.querySelectorAll('.czytaj-wiecej').forEach(function (przycisk) {
     var grupa = przycisk.getAttribute('data-grupa');
     // Każdy przycisk wraca do swojego napisu, nie do wspólnego „Czytaj więcej”
@@ -18,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         akapit.classList.toggle('pokazane', otwarte);
       });
       przycisk.setAttribute('aria-expanded', otwarte);
-      przycisk.textContent = otwarte ? 'Zwiń' : etykieta;
+      przycisk.textContent = otwarte ? zwin : etykieta;
     });
   });
 

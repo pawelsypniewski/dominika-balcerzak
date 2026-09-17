@@ -160,6 +160,19 @@ section[id] { scroll-margin-top: calc(var(--wysokosc-naglowka) + 2px); }
 }
 .menu a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
+/* Przełącznik języka PL / EN — między menu a „Umów się” */
+.jezyk {
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  border-left: var(--linia);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--czarny);
+}
+.jezyk:hover { color: var(--czarny); text-decoration: underline; text-underline-offset: 4px; }
+
 .umow {
   padding: 0 20px;
   background: var(--niebieski);
@@ -789,6 +802,14 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
    jedna pod drugą, a pionowe linie zamieniają się w poziome. */
 
 @media (max-width: 900px) {
+  /* Nagłówek w dwóch wierszach: logo, PL/EN i „Umów się” u góry, menu pod nimi.
+     W jednym wierszu z przełącznikiem języka nie mieścił się na iPadzie (768 px). */
+  .naglowek__wnetrze { flex-wrap: wrap; }
+  .logo { flex: 1 1 0; min-width: 0; }
+  .menu { order: 1; flex: 1 1 100%; margin: 0 -24px; padding: 0 6px; border-top: var(--linia); }
+  .menu a { padding-top: 12px; padding-bottom: 12px; }
+  section[id] { scroll-margin-top: 98px; }
+
   .hero__tekst,
   .hero__zdjecie,
   .sekcja__bok,
@@ -829,8 +850,10 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .naglowek { position: static; }
   section[id] { scroll-margin-top: 0; }
 
-  .naglowek__wnetrze { flex-direction: column; padding: 0; min-height: 0; }
-  .logo { padding: 14px 24px; margin-right: 0; }
+  /* Logo i przełącznik języka w jednym wierszu, menu pod nimi na całą szerokość */
+  .naglowek__wnetrze { flex-wrap: wrap; padding: 0; min-height: 0; }
+  .logo { flex: 1 1 0; min-width: 0; padding: 14px 8px 14px 24px; margin-right: 0; }
+  .jezyk { padding: 0 24px 0 16px; border-left: 0; }
   .logo__nazwa { font-size: 14px; }
   .logo__podpis { font-size: 10px; }
   .umow { display: none; }
@@ -839,6 +862,9 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
      się na całą szerokość, a napisy zmniejszają się razem z ekranem
      (12 px na zwykłym telefonie, 10 px na najwęższym, 320 px) */
   .menu {
+    order: 1;
+    flex: 1 1 100%;
+    margin: 0;
     border-top: var(--linia);
     justify-content: space-between;
     /* Na szerszych ekranach (np. telefon poziomo) menu nie rozjeżdża się
@@ -1034,7 +1060,8 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
    Apple, żeby łatwo trafić palcem. */
 
 @media (pointer: coarse) {
-  .menu a { min-height: 44px; }
+  .menu a,
+  .jezyk { min-height: 44px; }
   .czytaj-wiecej { min-height: 44px; }
   .stopka__menu { gap: 0 24px; }
   .stopka__menu a { display: inline-flex; align-items: center; min-height: 44px; }
