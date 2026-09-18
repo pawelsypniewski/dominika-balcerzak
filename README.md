@@ -74,7 +74,8 @@ i otwórz http://localhost:8130/
 - `apple-touch-icon.png` — 180×180, ikona po dodaniu strony do ekranu głównego iPhone'a.
 - `404.html` — strona pokazywana pod nieistniejącym adresem.
 
-**Po podpięciu własnej domeny trzeba podmienić adresy w czterech miejscach:**
+**Po podpięciu własnej domeny** uruchom `python3 zmien-domene.py dominikabalcerzak.pl` —
+podmienia wszystkie adresy i tworzy plik `CNAME`. Ręcznie to te miejsca:
 
 1. `index.html` i `en/index.html` — `canonical`, `hreflang`, `og:url`, `og:image`
 2. `polityka-prywatnosci.html` i `en/privacy-policy.html` — `canonical`, `hreflang`, `og:url`, `og:image`
