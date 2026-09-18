@@ -1,0 +1,12 @@
+/* Wersja bez JavaScriptu. Wczytywana tylko przez <noscript> w <head>.
+
+   Na telefonie dłuższe teksty, sygnały i kursy chowają się pod przyciskami
+   „Czytaj więcej”. Rozwija je skrypt, więc bez skryptu trzeba je pokazać od razu
+   i schować same przyciski — inaczej część treści byłaby nie do odczytania. */
+
+@media (max-width: 720px) {
+  .czytaj-wiecej { display: none !important; }
+  p.zwijane { display: block !important; }
+  li.sygnal.zwijane { display: grid !important; }
+  li.kurs.zwijane { display: block !important; }
+}

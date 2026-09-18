@@ -961,11 +961,12 @@ a.publikacja:hover { background: var(--niebieski); color: var(--bialy); }
   .stos { gap: 16px; }
 
   /* Akapity schowane pod „Czytaj więcej”, dopóki ktoś nie kliknie
-     (skrypt dodaje im klasę „pokazane”) */
-  .js .zwijane:not(.pokazane) { display: none; }
+     (skrypt dodaje im klasę „pokazane”). Gdy JavaScript nie działa,
+     plik bez-js.css z <noscript> pokazuje je z powrotem. */
+  .zwijane:not(.pokazane) { display: none; }
   .czytaj-wiecej--wstep[aria-expanded="true"] { margin-bottom: 16px; }
 
-  .js .czytaj-wiecej {
+  .czytaj-wiecej {
     display: inline-flex;
     align-self: flex-start;
     align-items: center;
