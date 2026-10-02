@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Galeria przy Kościelnej 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Układ: scena 3D na cały ekran, panel sterowania jak karteczka przypięta do planu (lewy górny róg; na telefonie dolna szuflada). */
+:root {
+  --bg: #eceae5;          /* tło sceny – szary tynk */
+  --ground: #d9d5cc;
+  --panel: #fbfaf7;
+  --fg: #23211d;
+  --muted: #6d685f;
+  --line: #d4cfc4;
+  --edge: #3a3731;
+  --accent: #b5651d;      /* listwy – mosiądz/miedź */
+  --accent-soft: rgba(181,101,29,.14);
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1a18; --ground: #2a2824; --panel: #24221f; --fg: #eeebe4; --muted: #a39d92;
+    --line: #3b3833; --edge: #15140f; --accent: #e09a52; --accent-soft: rgba(224,154,82,.18);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1a18; --ground: #2a2824; --panel: #24221f; --fg: #eeebe4; --muted: #a39d92;
+  --line: #3b3833; --edge: #15140f; --accent: #e09a52; --accent-soft: rgba(224,154,82,.18);
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 14px; overflow: hidden; }
+#scena { position: fixed; inset: 0; }
+#scena canvas { display: block; touch-action: none; }
+
+.panel {
+  position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); left: 16px; width: 300px;
+  max-height: calc(100% - 32px); overflow: auto;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.10);
+  padding: 16px; display: flex; flex-direction: column; gap: 14px; z-index: 2;
+}
+.panel h1 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.1; margin: 0; text-wrap: balance; }
+.panel .pod { color: var(--muted); font-size: 12.5px; margin: 4px 0 0; line-height: 1.45; }
+.grupa { display: flex; flex-direction: column; gap: 8px; }
+.etykieta { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.widoki { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.widoki button {
+  font: 500 13px/1.2 var(--font-body); color: var(--fg); background: transparent;
+  border: 1px solid var(--line); border-radius: 4px; padding: 8px 6px; cursor: pointer; text-align: center;
+}
+.widoki button:hover { border-color: var(--fg); }
+.widoki button[aria-pressed="true"] { background: var(--fg); color: var(--panel); border-color: var(--fg); }
+button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.suwak { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; font-size: 13px; }
+.suwak output { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+.suwak input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+.przelacznik { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.przelacznik input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+.listwy { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.listwy td { padding: 3px 0; border-bottom: 1px solid var(--line); }
+.listwy td:last-child { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.listwy tr.suma td { border-bottom: 0; font-weight: 500; padding-top: 6px; }
+.listwy .kreska { display: inline-block; width: 14px; height: 3px; background: var(--accent); vertical-align: middle; margin-right: 6px; border-radius: 1px; }
+.uwaga { font-size: 11.5px; color: var(--muted); line-height: 1.45; margin: 0; }
+details summary { cursor: pointer; font-size: 12.5px; color: var(--muted); }
+details[open] summary { margin-bottom: 6px; }
+.zwin { display: none; }
+
+/* podpisy w scenie */
+.lbl { pointer-events: none; white-space: nowrap; font-family: var(--font-body); }
+.lbl-sala { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: #2b2925; text-shadow: 0 0 6px rgba(255,255,255,.9); }
+.lbl-obok { font-size: 13px; font-weight: 500; color: var(--fg); letter-spacing: .06em; text-transform: uppercase; opacity: .8; }
+.lbl-wym { font-family: var(--font-mono); font-size: 10.5px; color: #2b2925; background: rgba(255,255,255,.88); border: 1px solid rgba(0,0,0,.12); padding: 1px 4px; border-radius: 3px; font-variant-numeric: tabular-nums; }
+.lbl-wym.l { color: #fff; background: #b5651d; border-color: #b5651d; }
+.ukryj-wym .lbl-wym { display: none; }
+
+@media (max-width: 720px) {
+  .panel { top: auto; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); left: 12px; right: 12px; width: auto; max-height: 52%; padding: 12px 14px; gap: 12px; }
+  .panel h1 { font-size: 18px; }
+  .zwin { display: inline-block; position: absolute; top: 10px; right: 10px; font: 500 12px var(--font-body); color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; cursor: pointer; }
+  .panel.zwiniety > :not(.naglowek):not(.zwin) { display: none; }
+  .panel.zwiniety .pod { display: none; }
+  .lbl-sala { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<div id="scena" aria-label="Model 3D galerii – przeciągnij, aby obracać, przewiń lub uszczypnij, aby przybliżyć"></div>
+
+<aside class="panel" id="panel">
+  <button class="zwin" id="zwin" type="button" aria-expanded="true">Zwiń</button>
+  <div class="naglowek">
+    <h1>Galeria przy ul. Kościelnej</h1>
+    <p class="pod">Model z planu: sala duża, sala mała, kuchnia i listwy ekspozycyjne. Przeciągnij, aby obracać; kółko lub dwa palce przybliżają.</p>
+  </div>
+
+  <div class="grupa">
+    <span class="etykieta">Widok</span>
+    <div class="widoki" role="group" aria-label="Widok kamery">
+      <button type="button" data-widok="ogolny" aria-pressed="true">Ogólny 3D</button>
+      <button type="button" data-widok="plan" aria-pressed="false">Z góry (plan)</button>
+      <button type="button" data-widok="duza" aria-pressed="false">W sali dużej</button>
+      <button type="button" data-widok="mala" aria-pressed="false">W sali małej</button>
+    </div>
+  </div>
+
+  <div class="grupa">
+    <label class="suwak" for="wysokosc">Wysokość sal <output id="wysokosc-out">320 cm</output>
+      <input type="range" id="wysokosc" min="250" max="450" step="5" value="320">
+    </label>
+    <label class="suwak" for="przekroj">Przekrój ścian <output id="przekroj-out">pełne</output>
+      <input type="range" id="przekroj" min="40" max="450" step="5" value="450">
+    </label>
+  </div>
+
+  <div class="grupa">
+    <label class="przelacznik" for="pokaz-wym"><input type="checkbox" id="pokaz-wym" checked> Wymiary z planu</label>
+    <label class="przelacznik" for="pokaz-strefe"><input type="checkbox" id="pokaz-strefe" checked> Ściany pod listwami (strefa wieszania)</label>
+  </div>
+
+  <div class="grupa">
+    <span class="etykieta">Listwy ekspozycyjne</span>
+    <table class="listwy">
+      <tbody>
+        <tr><td><span class="kreska"></span>Sala duża – ściana tylna</td><td>586 cm</td></tr>
+        <tr><td><span class="kreska"></span>Sala duża – ściana boczna</td><td>510 cm</td></tr>
+        <tr><td><span class="kreska"></span>Sala duża – wnęka</td><td>118 cm</td></tr>
+        <tr><td><span class="kreska"></span>Sala mała – ściana tylna</td><td>637 cm</td></tr>
+        <tr><td><span class="kreska"></span>Sala mała – przy kuchni</td><td>260 cm</td></tr>
+        <tr><td><span class="kreska"></span>Sala mała – od ulicy</td><td>288 cm</td></tr>
+        <tr class="suma"><td>Razem</td><td>23,99 m</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <details>
+    <summary>Co jest założeniem, a co z planu</summary>
+    <p class="uwaga">Długości ścian, okien, drzwi i listew są z planu. Założone: wysokość sal (suwak), okna od 80 do 240 cm, drzwi 210 cm, głębokość wnęki 30 cm, grubość ścian. Plan sali dużej nie domyka się o kilka cm (lewa ściana 679 cm, prawa 705 cm; góra 813, dół 816) – brakujące odcinki są dołożone jako pełna ściana w narożniku. Przejście między salami jest wyrównane, więc sala mała jest przesunięta o 57 cm względem dużej.</p>
+  </details>
+</aside>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/renderers/CSS2DRenderer.js"></script>
+<script>
+(function () {
+  'use strict';
+  // Jednostki: centymetry. Plan: x w prawo (wzdłuż ul. Kościelnej), y w głąb (od ulicy).
+  // Three.js: X = x, Y = wysokość, Z = -y.
+
+  const T_ZEW = 45, T_WEW = 25, T_WSP = 30, T_KUCH = 12;
+  const PARAPET = 80, NADPROZE_OKNA = 240, DRZWI = 210, WNEKA = 30;
+
+  // Sala duża: wnętrze x 0..816, y 0..705
+  const D = { x0: 0, x1: 816, y0: 0, y1: 705 };
+  // Sala mała: przejście (604 cm od lewego narożnika dużej) wyrównane z 547 cm od lewego narożnika małej
+  const M = { x0: 57, x1: 57 + 812, y0: 705 + T_WSP, y1: 705 + T_WSP + 471 };
+  const K = { x0: M.x0, x1: M.x0 + 164, y0: M.y1 - 308, y1: M.y1 }; // kuchnia
+
+  const stan = { H: 320, ciecie: 450, wymiary: true, strefa: true };
+
+  const kontener = document.getElementById('scena');
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  kontener.appendChild(renderer.domElement);
+
+  const lblRenderer = new THREE.CSS2DRenderer();
+  lblRenderer.domElement.style.position = 'absolute';
+  lblRenderer.domElement.style.inset = '0';
+  lblRenderer.domElement.style.pointerEvents = 'none';
+  kontener.appendChild(lblRenderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 5, 30000);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.maxPolarAngle = Math.PI * 0.495;
+  controls.minDistance = 30;
+  controls.maxDistance = 6000;
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xb8b0a0, 0.75));
+  const slonce = new THREE.DirectionalLight(0xfff4e6, 0.65);
+  slonce.position.set(-500, 2400, 900);
+  slonce.target.position.set(430, 0, -600);
+  slonce.castShadow = true;
+  slonce.shadow.mapSize.set(2048, 2048);
+  Object.assign(slonce.shadow.camera, { left: -1100, right: 1100, top: 1100, bottom: -1100, near: 100, far: 5000 });
+  slonce.shadow.bias = -0.0005;
+  scene.add(slonce, slonce.target);
+
+  const mat = {
+    sciana: new THREE.MeshStandardMaterial({ color: 0xf7f5f0, roughness: 0.95 }),
+    podloga: new THREE.MeshStandardMaterial({ color: 0xc9ab84, roughness: 0.8 }),
+    kuchnia: new THREE.MeshStandardMaterial({ color: 0xbfc3c0, roughness: 0.7 }),
+    szklo: new THREE.MeshStandardMaterial({ color: 0x9cc7d8, transparent: true, opacity: 0.35, roughness: 0.1, metalness: 0.1, depthWrite: false }),
+    rama: new THREE.MeshStandardMaterial({ color: 0x4a4740, roughness: 0.6 }),
+    drewno: new THREE.MeshStandardMaterial({ color: 0x8a6a4a, roughness: 0.7 }),
+    listwa: new THREE.MeshStandardMaterial({ color: 0xb5651d, roughness: 0.35, metalness: 0.6 }),
+    strefa: new THREE.MeshBasicMaterial({ color: 0xb5651d, transparent: true, opacity: 0.10, depthWrite: false, side: THREE.DoubleSide }),
+    chodnik: new THREE.MeshStandardMaterial({ color: 0xb9b4aa, roughness: 1 }),
+    jezdnia: new THREE.MeshStandardMaterial({ color: 0x55534f, roughness: 1 }),
+    patio: new THREE.MeshStandardMaterial({ color: 0xa9b19a, roughness: 1 }),
+    grunt: new THREE.MeshStandardMaterial({ color: 0xd9d5cc, roughness: 1 })
+  };
+  const krawedz = new THREE.LineBasicMaterial({ color: 0x3a3731, transparent: true, opacity: 0.45 });
+
+  let model = new THREE.Group();
+  scene.add(model);
+  let przeszkody = [], podpisy = [];
+
+  // Prostopadłościan w układzie planu: x0..x1, y0..y1 (plan), z0..z1 (wysokość)
+  function blok(x0, x1, y0, y1, z0, z1, m, krawedzie) {
+    const sx = Math.abs(x1 - x0), sy = Math.abs(y1 - y0), sz = z1 - z0;
+    if (sx < 0.1 || sy < 0.1 || sz < 0.1) return null;
+    const g = new THREE.BoxGeometry(sx, sz, sy);
+    const mesh = new THREE.Mesh(g, m);
+    mesh.position.set((x0 + x1) / 2, (z0 + z1) / 2, -(y0 + y1) / 2);
+    mesh.castShadow = m !== mat.szklo && m !== mat.strefa;
+    mesh.receiveShadow = true;
+    model.add(mesh);
+    if (m === mat.sciana || m === mat.drewno) przeszkody.push(mesh);
+    if (krawedzie !== false) {
+      const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), krawedz);
+      l.position.copy(mesh.position);
+      model.add(l);
+    }
+    return mesh;
+  }
+
+  function podpis(tekst, klasa, x, y, z) {
+    const el = document.createElement('div');
+    el.className = 'lbl ' + klasa;
+    el.textContent = tekst;
+    const o = new THREE.CSS2DObject(el);
+    o.position.set(x, z, -y);
+    model.add(o);
+    podpisy.push(o);
+    return o;
+  }
+
+  // Ściana wzdłuż linii wnętrza od p do q; n = normalna na zewnątrz (oś), t = grubość.
+  // Odcinki: { d: długość, typ: 's'|'okno'|'drzwi'|'przejscie'|'wneka', skrzydlo, opis }
+  function sciana(p, q, n, t, odcinki, ext0, ext1) {
+    const L = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    const d = [(q[0] - p[0]) / L, (q[1] - p[1]) / L];
+    const H = stan.H, C = Math.min(stan.ciecie, H);
+    const pt = (s, o) => [p[0] + d[0] * s + n[0] * o, p[1] + d[1] * s + n[1] * o];
+    function pudlo(s0, s1, o0, o1, z0, z1, m, kr) {
+      z1 = Math.min(z1, C);
+      if (z1 <= z0) return;
+      const a = pt(s0, o0), b = pt(s1, o1);
+      blok(Math.min(a[0], b[0]), Math.max(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[1], b[1]), z0, z1, m, kr);
+    }
+    if (ext0) pudlo(-ext0, 0, 0, t, 0, H, mat.sciana);
+    if (ext1) pudlo(L, L + ext1, 0, t, 0, H, mat.sciana);
+    let s = 0;
+    for (const od of odcinki) {
+      const s0 = s, s1 = s + od.d;
+      switch (od.typ) {
+        case 's':
+          pudlo(s0, s1, 0, t, 0, H, mat.sciana); break;
+        case 'okno':
+          pudlo(s0, s1, 0, t, 0, PARAPET, mat.sciana);
+          pudlo(s0, s1, 0, t, NADPROZE_OKNA, H, mat.sciana);
+          pudlo(s0, s1, t * 0.45, t * 0.55, PARAPET, NADPROZE_OKNA, mat.szklo, false);
+          pudlo(s0 + od.d / 2 - 2, s0 + od.d / 2 + 2, t * 0.4, t * 0.6, PARAPET, NADPROZE_OKNA, mat.rama);
+          break;
+        case 'drzwi':
+        case 'przejscie':
+          pudlo(s0, s1, 0, t, DRZWI, H, mat.sciana);
+          if (od.skrzydlo === 'szklo') {
+            pudlo(s0, s1, t * 0.45, t * 0.55, 0, DRZWI, mat.szklo, false);
+            pudlo(s0 + od.d / 2 - 2, s0 + od.d / 2 + 2, t * 0.4, t * 0.6, 0, DRZWI, mat.rama);
+          } else if (od.skrzydlo === 'drewno') {
+            pudlo(s0 + 2, s1 - 2, t * 0.6, t * 0.7, 0, DRZWI - 2, mat.drewno);
+          }
+          break;
+        case 'wneka':
+          pudlo(s0, s1, WNEKA, WNEKA + t, 0, H, mat.sciana); break;
+      }
+      if (od.opis) {
+        const pp = pt((s0 + s1) / 2, od.typ === 'wneka' ? WNEKA - 12 : -12);
+        podpis(od.opis, 'lbl-wym', pp[0], pp[1], Math.min(od.typ === 'drzwi' || od.typ === 'przejscie' ? 110 : 140, C - 10));
+      }
+      s = s1;
+    }
+  }
+
+  // Listwa na licu ściany (od strony wnętrza), od punktu a do b w planie; wn = normalna do wnętrza
+  function listwa(a, b, wn, opis) {
+    const H = stan.H, zL = H - 8;
+    const x0 = Math.min(a[0], b[0]), x1 = Math.max(a[0], b[0]);
+    const y0 = Math.min(a[1], b[1]), y1 = Math.max(a[1], b[1]);
+    const gr = 3;
+    const ox = wn[0], oy = wn[1];
+    const bx0 = ox ? (ox > 0 ? x0 : x0 - gr) : x0, bx1 = ox ? (ox > 0 ? x0 + gr : x0) : x1;
+    const by0 = oy ? (oy > 0 ? y0 : y0 - gr) : y0, by1 = oy ? (oy > 0 ? y0 + gr : y0) : y1;
+    if (zL <= stan.ciecie) blok(bx0, bx1, by0, by1, zL - 3, zL + 1, mat.listwa, false);
+    if (stan.strefa) {
+      const zs1 = Math.min(zL - 5, stan.ciecie);
+      const sx0 = ox ? (ox > 0 ? x0 + 0.6 : x0 - 1.2) : x0, sx1 = ox ? (ox > 0 ? x0 + 1.2 : x0 - 0.6) : x1;
+      const sy0 = oy ? (oy > 0 ? y0 + 0.6 : y0 - 1.2) : y0, sy1 = oy ? (oy > 0 ? y0 + 1.2 : y0 - 0.6) : y1;
+      if (zs1 > 60) blok(sx0, sx1, sy0, sy1, 60, zs1, mat.strefa, false);
+    }
+    const mx = (x0 + x1) / 2 + ox * 14, my = (y0 + y1) / 2 + oy * 14;
+    podpis(opis, 'lbl-wym l', mx, my, Math.min(zL - 22, stan.ciecie - 10));
+  }
+
+  function zbuduj() {
+    scene.remove(model);
+    model.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.element) o.element.remove(); });
+    model = new THREE.Group();
+    scene.add(model);
+    przeszkody = []; podpisy = [];
+
+    // Otoczenie
+    blok(-900, 1900, -900, 2000, -6, -1, mat.grunt, false);
+    blok(-900, 1900, -T_ZEW - 260, -T_ZEW, -1, 0, mat.chodnik, false);
+    blok(-900, 1900, -T_ZEW - 900, -T_ZEW - 260, -1.5, -0.5, mat.jezdnia, false);
+    blok(M.x1 + T_ZEW, M.x1 + T_ZEW + 420, M.y0, M.y1, -1, 0, mat.patio, false);
+
+    // Podłogi
+    blok(D.x0, D.x1, D.y0, D.y1, -1, 0, mat.podloga, false);
+    blok(M.x0, M.x1, M.y0, M.y1, -1, 0, mat.podloga, false);
+    blok(604, 702, D.y1, M.y0, -1, 0, mat.podloga, false);
+    blok(K.x0, K.x1 - T_KUCH, K.y0, K.y1, -0.9, 0.1, mat.kuchnia, false);
+
+    // SALA DUŻA
+    // od ulicy (dół planu), lewa → prawa
+    sciana([D.x0, D.y0], [D.x1, D.y0], [0, -1], T_ZEW, [
+      { d: 98, typ: 's', opis: '98 ściana' }, { d: 127, typ: 'okno', opis: '127 okno' },
+      { d: 117, typ: 's', opis: '117 ściana' }, { d: 127, typ: 'okno', opis: '127 okno' },
+      { d: 117, typ: 's', opis: '117 ściana' }, { d: 127, typ: 'okno', opis: '127 okno' },
+      { d: 103, typ: 's', opis: '103 ściana' }
+    ], T_WEW, T_ZEW);
+    // prawa (wejście), od ulicy w głąb
+    sciana([D.x1, D.y0], [D.x1, D.y1], [1, 0], T_ZEW, [
+      { d: 67, typ: 's', opis: '67' }, { d: 154, typ: 'drzwi', skrzydlo: 'szklo', opis: '154 drzwi wejściowe' },
+      { d: 65, typ: 's', opis: '65' }, { d: 137, typ: 'wneka', opis: '137 wnęka' },
+      { d: 68, typ: 's', opis: '68' }, { d: 140, typ: 'okno', opis: '140 okno' },
+      { d: 74, typ: 's', opis: '74' }
+    ]);
+    // tylna (wspólna z salą małą), lewa → prawa; przedłużona do prawej krawędzi sali małej
+    sciana([D.x0, D.y1], [M.x1, D.y1], [0, 1], T_WSP, [
+      { d: 604, typ: 's', opis: '604 ściana' }, { d: 98, typ: 'przejscie', opis: '98 przejście' },
+      { d: 111, typ: 's', opis: '111' }, { d: M.x1 - D.x0 - 813, typ: 's' }
+    ], T_WEW, T_ZEW);
+    // lewa (kantorek), od ulicy w głąb
+    sciana([D.x0, D.y0], [D.x0, D.y1], [-1, 0], T_WEW, [
+      { d: 28, typ: 's' }, { d: 107, typ: 'drzwi', skrzydlo: 'drewno', opis: '107 drzwi kantorka' },
+      { d: 544, typ: 's', opis: '544 ściana' }, { d: 26, typ: 's' }
+    ]);
+
+    // SALA MAŁA
+    // tylna (dół planu = ściana wspólna; zbudowana wyżej) – podpisy od strony sali małej
+    const zW = Math.min(140, Math.min(stan.H, stan.ciecie) - 10);
+    podpis('547 ściana', 'lbl-wym', M.x0 + 273, M.y0 + 12, zW);
+    podpis('98 przejście', 'lbl-wym', M.x0 + 596, M.y0 + 12, Math.min(110, zW));
+    podpis('154 ściana', 'lbl-wym', M.x1 - 77, M.y0 + 12, zW);
+    // prawa (patio), od ściany wspólnej w głąb
+    sciana([M.x1, M.y0], [M.x1, M.y1], [1, 0], T_ZEW, [
+      { d: 146, typ: 'drzwi', skrzydlo: 'szklo', opis: '146 drzwi na patio' },
+      { d: 73, typ: 's', opis: '73' }, { d: 127, typ: 'okno', opis: '127 okno' },
+      { d: 125, typ: 's', opis: '125 ściana' }
+    ], 0, T_ZEW);
+    // górna (najdalej od ulicy), lewa → prawa
+    sciana([M.x0, M.y1], [M.x1, M.y1], [0, 1], T_ZEW, [
+      { d: 164, typ: 's' }, { d: 648, typ: 's', opis: '648 ściana' }
+    ], T_WEW, 0);
+    // lewa (hol), od ściany wspólnej w głąb
+    sciana([M.x0, M.y0], [M.x0, M.y1], [-1, 0], T_WEW, [
+      { d: 9, typ: 's' }, { d: 145, typ: 'drzwi', skrzydlo: 'drewno', opis: '145 drzwi do holu' },
+      { d: 471 - 154, typ: 's' }
+    ]);
+    // kuchnia: ściana 308 od strony sali i szerokie otwarcie 164 od dołu
+    sciana([K.x1, K.y0], [K.x1, K.y1], [-1, 0], T_KUCH, [{ d: 308, typ: 's', opis: '308 ściana' }]);
+    sciana([K.x0, K.y0], [K.x1, K.y0], [0, -1], T_KUCH, [{ d: 164 - T_KUCH, typ: 'przejscie', opis: '164 wejście do kuchni' }, { d: T_KUCH, typ: 's' }]);
+
+    // LISTWY
+    listwa([D.x0 + 9, D.y1], [D.x0 + 595, D.y1], [0, -1], '586 listwa');
+    listwa([D.x0, 135 + 17], [D.x0, 135 + 527], [1, 0], '510 listwa');
+    listwa([D.x1 + WNEKA, 286 + 9.5], [D.x1 + WNEKA, 286 + 127.5], [-1, 0], '118 listwa');
+    listwa([K.x1 + 5.5, M.y1], [K.x1 + 642.5, M.y1], [0, -1], '637 listwa');
+    listwa([K.x1, K.y0 + 24], [K.x1, K.y0 + 284], [1, 0], '260 listwa');
+    listwa([M.x0 + 194, M.y0], [M.x0 + 482, M.y0], [0, 1], '288 listwa');
+
+    // Nazwy
+    podpis('Sala duża', 'lbl-sala', 400, 360, 4);
+    podpis('Sala mała', 'lbl-sala', 560, 960, 4);
+    podpis('Kuchnia', 'lbl-sala', K.x0 + 76, K.y0 + 160, 4);
+    podpis('ul. Kościelna', 'lbl-obok', 408, -T_ZEW - 520, 2);
+    podpis('wejście', 'lbl-obok', D.x1 + T_ZEW + 140, 140, 2);
+    podpis('patio', 'lbl-obok', M.x1 + T_ZEW + 210, (M.y0 + M.y1) / 2, 2);
+    podpis('kantorek', 'lbl-obok', -170, 90, 2);
+    podpis('hol', 'lbl-obok', M.x0 - 140, M.y0 + 80, 2);
+  }
+
+  // Kolory zależne od motywu
+  function kolory() {
+    const cs = getComputedStyle(document.documentElement);
+    const c = v => new THREE.Color(cs.getPropertyValue(v).trim() || '#ccc');
+    scene.background = c('--bg');
+    mat.grunt.color = c('--ground');
+    scene.fog = new THREE.Fog(scene.background, 3500, 9000);
+  }
+  kolory();
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  (mq.addEventListener ? mq.addEventListener('change', kolory) : mq.addListener(kolory));
+  new MutationObserver(kolory).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // Widoki
+  const SR = { x: 434, y: 600 };
+  const widoki = {
+    ogolny: { poz: [SR.x - 900, 1350, -SR.y + 1500], cel: [SR.x, 60, -SR.y] },
+    plan: { poz: [SR.x, 2300, -SR.y + 1], cel: [SR.x, 0, -SR.y] },
+    duza: { poz: [770, 160, -130], cel: [80, 150, -640] },
+    mala: { poz: [830, 160, -780], cel: [220, 140, -1060] }
+  };
+  const ruchOgr = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let anim = null;
+  function idzDo(nazwa, natychmiast) {
+    const w = widoki[nazwa];
+    let poz = new THREE.Vector3(...w.poz), cel = new THREE.Vector3(...w.cel);
+    if (nazwa === 'plan' || nazwa === 'ogolny') {
+      // na wąskim ekranie odsuń kamerę, żeby zmieścić całość
+      const k = Math.max(1, 1.15 / Math.max(camera.aspect, 0.45));
+      poz = cel.clone().add(poz.clone().sub(cel).multiplyScalar(k));
+    }
+    if (natychmiast || ruchOgr) { camera.position.copy(poz); controls.target.copy(cel); controls.update(); anim = null; return; }
+    anim = { t0: performance.now(), p0: camera.position.clone(), c0: controls.target.clone(), p1: poz, c1: cel };
+  }
+  document.querySelectorAll('[data-widok]').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-widok]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    idzDo(b.dataset.widok);
+  }));
+  controls.addEventListener('start', () => { anim = null; });
+
+  // Sterowanie
+  const wys = document.getElementById('wysokosc'), wysOut = document.getElementById('wysokosc-out');
+  const prz = document.getElementById('przekroj'), przOut = document.getElementById('przekroj-out');
+  function odswiezSuwaki() {
+    stan.H = +wys.value;
+    prz.max = stan.H;
+    stan.ciecie = +prz.value >= stan.H ? stan.H : +prz.value;
+    wysOut.textContent = stan.H + ' cm';
+    przOut.textContent = stan.ciecie >= stan.H ? 'pełne' : 'do ' + stan.ciecie + ' cm';
+  }
+  wys.addEventListener('input', () => { const pelne = +prz.value >= stan.H; odswiezSuwaki(); if (pelne) { prz.value = stan.H; odswiezSuwaki(); } zbuduj(); });
+  prz.addEventListener('input', () => { odswiezSuwaki(); zbuduj(); });
+  document.getElementById('pokaz-wym').addEventListener('change', e => kontener.classList.toggle('ukryj-wym', !e.target.checked));
+  document.getElementById('pokaz-strefe').addEventListener('change', e => { stan.strefa = e.target.checked; zbuduj(); });
+  const panel = document.getElementById('panel'), zwin = document.getElementById('zwin');
+  zwin.addEventListener('click', () => {
+    const z = panel.classList.toggle('zwiniety');
+    zwin.textContent = z ? 'Rozwiń' : 'Zwiń';
+    zwin.setAttribute('aria-expanded', String(!z));
+  });
+
+  function rozmiar() {
+    const w = kontener.clientWidth, h = kontener.clientHeight;
+    renderer.setSize(w, h);
+    lblRenderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', rozmiar);
+
+  if (window.matchMedia('(max-width: 720px)').matches) zwin.click();
+
+  // Podpisy schowane za ścianą nie są pokazywane
+  const promien = new THREE.Raycaster(), tmp = new THREE.Vector3();
+  function zaslaniane() {
+    for (const o of podpisy) {
+      o.getWorldPosition(tmp);
+      const dist = tmp.distanceTo(camera.position);
+      promien.set(camera.position, tmp.sub(camera.position).normalize());
+      promien.far = dist - 8;
+      const ukryty = promien.intersectObjects(przeszkody, false).length > 0;
+      o.element.style.visibility = ukryty ? 'hidden' : '';
+    }
+  }
+
+  odswiezSuwaki();
+  zbuduj();
+  rozmiar();
+  idzDo('ogolny', true);
+
+  let klatka = 0;
+  const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  (function petla(now) {
+    if (anim) {
+      const t = Math.min(1, (now - anim.t0) / 1000), e = ease(t);
+      camera.position.lerpVectors(anim.p0, anim.p1, e);
+      controls.target.lerpVectors(anim.c0, anim.c1, e);
+      if (t >= 1) anim = null;
+    }
+    controls.update();
+    if ((klatka++ % 4) === 0) zaslaniane();
+    renderer.render(scene, camera);
+    lblRenderer.render(scene, camera);
+    requestAnimationFrame(petla);
+  })(performance.now());
+})();
+</script>
+</body>
+</html>
