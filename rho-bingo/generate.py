@@ -1,7 +1,8 @@
 """Rho Bingo — Family Day.
 
 Generates:
-  rho-bingo-cards.pdf        5 different 4x4 cards, each A5, two per A4 sheet (cut in half)
+  rho-bingo-cards.pdf        5 different 4x4 cards + a "How to play" sheet, each A5,
+                             two per A4 sheet (cut in half)
   rho-bingo-host-script.pdf  A4 text to read aloud (English) with the bingo words highlighted
 
 Logo: rho-bingo/logo.pdf (vector, embedded as is) or logo.png / logo.jpg.
@@ -53,6 +54,9 @@ INTRO = [
     "Welcome to Rho Bingo!",
     "In a moment you will hear a short story about our company. "
     "Each of you has received a bingo card with different words.",
+    "Here's how to play: each time you hear a word from your card, cross it out. As soon as "
+    "you have four crossed-out words in a line \u2013 across, down or diagonally \u2013 shout "
+    "\u201cBINGO!\u201d and raise your card so we can check it.",
 ]
 
 SCRIPT = [
@@ -249,17 +253,12 @@ CELL_SIZE_PT = next(s for s in (11, 10.5, 10, 9.5, 9, 8.5, 8)
                     if fits(s, CELL_FONT, CELL - 2 * CELL_PAD))
 
 
-def draw_card(c, ox, oy, number, grid, cell_size=CELL):
-    W, H = A5
-    c.saveState()
-    c.translate(ox, oy)
-
-    # frame
+def draw_header(c, W, H, title, title_size, tag=None):
+    """Frame, logo, Family Day label and title shared by the cards and the rules sheet."""
     c.setStrokeColor(LINE)
     c.setLineWidth(0.8)
     c.roundRect(6 * mm, 6 * mm, W - 12 * mm, H - 12 * mm, 4 * mm, stroke=1, fill=0)
 
-    # header: logo left, Family Day + card number right
     left, right = 13 * mm, W - 13 * mm
     draw_logo(c, left, H - 13 * mm, 48 * mm, 12 * mm)
 
@@ -269,13 +268,14 @@ def draw_card(c, ox, oy, number, grid, cell_size=CELL):
     c.setFillColor(white)
     spaced(c, "FAMILY DAY", right - pill_w / 2, H - 13 * mm - pill_h + 2.05 * mm,
            "Montserrat-ExtraBold", 7.5, 1.2, align="center")
-    c.setFillColor(MUTED)
-    spaced(c, f"CARD {number:02d}", right, H - 25 * mm, "Montserrat-SemiBold", 7, 1.2, align="right")
+    if tag:
+        c.setFillColor(MUTED)
+        spaced(c, tag, right, H - 25 * mm, "Montserrat-SemiBold", 7, 1.2, align="right")
 
-    # title
     c.setFillColor(BLUE)
-    spaced(c, "BINGO", W / 2, H - 40 * mm, "Montserrat-ExtraBold", 40, 4, align="center")
-    parts = [("Listen", BLUE), ("  •  ", GREEN), ("Mark", BLUE), ("  •  ", GREEN),
+    spaced(c, title, W / 2, H - 40 * mm, "Montserrat-ExtraBold", title_size, title_size / 10,
+           align="center")
+    parts = [("Listen", BLUE), ("  \u2022  ", GREEN), ("Mark", BLUE), ("  \u2022  ", GREEN),
              ("Shout BINGO!", BLUE)]
     c.setFont("Montserrat-SemiBold", 9)
     x = W / 2 - sum(pdfmetrics.stringWidth(t, "Montserrat-SemiBold", 9) for t, _ in parts) / 2
@@ -283,6 +283,13 @@ def draw_card(c, ox, oy, number, grid, cell_size=CELL):
         c.setFillColor(colour)
         c.drawString(x, H - 47 * mm, text)
         x += pdfmetrics.stringWidth(text, "Montserrat-SemiBold", 9)
+
+
+def draw_card(c, ox, oy, number, grid, cell_size=CELL):
+    W, H = A5
+    c.saveState()
+    c.translate(ox, oy)
+    draw_header(c, W, H, "BINGO", 40, tag=f"CARD {number:02d}")
 
     # grid
     gap = 2.4 * mm
@@ -324,6 +331,73 @@ def draw_card(c, ox, oy, number, grid, cell_size=CELL):
     c.restoreState()
 
 
+RULES = [
+    ("Grab a pen", "Write your name on your card. Every card is different."),
+    ("Listen", "The host reads a short story about Rho."),
+    ("Cross out your words", "Each time you hear a word from your card, cross it out."),
+    ("Make a line", "Cross out 4 words in a line: across, down or diagonally."),
+    ("Shout BINGO!", "Shout it out loud and raise your card. The host checks it, "
+                     "and the first correct card wins!"),
+]
+
+MINI_CELL, MINI_GAP = 5 * mm, 1 * mm
+
+
+def draw_mini_grid(c, x, y, line):
+    """Small 4x4 grid with one winning line filled in; (x, y) is the bottom-left corner."""
+    cell, gap = MINI_CELL, MINI_GAP
+    for r in range(SIZE):
+        for col in range(SIZE):
+            c.setFillColor(GREEN if (r, col) in line else TINT)
+            c.roundRect(x + col * (cell + gap), y + (SIZE - 1 - r) * (cell + gap),
+                        cell, cell, 0.8 * mm, stroke=0, fill=1)
+    return SIZE * cell + (SIZE - 1) * gap
+
+
+def draw_rules(c, ox, oy):
+    W, H = A5
+    c.saveState()
+    c.translate(ox, oy)
+    draw_header(c, W, H, "HOW TO PLAY", 26)
+
+    left, right = 15 * mm, W - 15 * mm
+    text_x = left + 11 * mm
+    y = H - 62 * mm
+    for i, (title, text) in enumerate(RULES, 1):
+        r = 3.6 * mm
+        c.setFillColor(GREEN)
+        c.circle(left + r, y + 1.2 * mm, r, stroke=0, fill=1)
+        c.setFillColor(white)
+        c.setFont("Montserrat-ExtraBold", 10)
+        c.drawCentredString(left + r, y + 1.2 * mm - 3.5, str(i))
+        c.setFillColor(BLUE)
+        c.setFont("Montserrat-Bold", 11)
+        c.drawString(text_x, y, title)
+        c.setFont("Montserrat-Regular", 8.8)
+        for line in wrap(text, "Montserrat-Regular", 8.8, right - text_x):
+            y -= 4.6 * mm
+            c.drawString(text_x, y, line)
+        y -= 10.5 * mm
+
+    # winning lines
+    c.setFillColor(MUTED)
+    spaced(c, "WINNING LINES", W / 2, y, "Montserrat-Bold", 7.5, 1.2, align="center")
+    examples = [("Across", LINES[1]), ("Down", LINES[SIZE + 2]), ("Diagonal", LINES[2 * SIZE])]
+    size = SIZE * MINI_CELL + (SIZE - 1) * MINI_GAP
+    step = (right - left - size) / (len(examples) - 1)
+    for k, (label, line) in enumerate(examples):
+        x = left + k * step
+        draw_mini_grid(c, x, y - 5 * mm - size, line)
+        c.setFillColor(BLUE)
+        c.setFont("Montserrat-SemiBold", 8.5)
+        c.drawCentredString(x + size / 2, y - 10 * mm - size, label)
+
+    c.setFillColor(GREEN)
+    c.setFont("Montserrat-Bold", 10)
+    c.drawCentredString(W / 2, 13 * mm, "Good luck and have fun!")
+    c.restoreState()
+
+
 def draw_cut_line(c, x, height):
     c.saveState()
     c.setStrokeColor(MUTED)
@@ -339,9 +413,11 @@ def make_cards_pdf(grids, path):
     c.setTitle("Rho Bingo — Family Day cards")
     c.setAuthor("Rho")
     a5_w = A5[0]
-    for start in range(0, len(grids), 2):
-        for slot, idx in enumerate(range(start, min(start + 2, len(grids)))):
-            draw_card(c, slot * a5_w, 0, idx + 1, grids[idx])
+    halves = [lambda c, x, i=i, g=g: draw_card(c, x, 0, i, g) for i, g in enumerate(grids, 1)]
+    halves.append(lambda c, x: draw_rules(c, x, 0))  # fills the free half of the last sheet
+    for start in range(0, len(halves), 2):
+        for slot, draw in enumerate(halves[start:start + 2]):
+            draw(c, slot * a5_w)
         draw_cut_line(c, a5_w, page_h)
         c.showPage()
     c.save()
@@ -355,16 +431,16 @@ def make_host_pdf(path):
     c.setAuthor("Rho")
     left, right = 22 * mm, W - 22 * mm
 
-    draw_logo(c, left, H - 18 * mm, 50 * mm, 12 * mm)
+    draw_logo(c, left, H - 15 * mm, 50 * mm, 12 * mm)
     c.setFillColor(GREEN)
-    spaced(c, "FAMILY DAY  ·  RHO BINGO", right, H - 25 * mm,
+    spaced(c, "FAMILY DAY  ·  RHO BINGO", right, H - 22 * mm,
            "Montserrat-Bold", 8, 1.4, align="right")
     c.setFillColor(BLUE)
     c.setFont("Montserrat-ExtraBold", 22)
-    c.drawString(left, H - 44 * mm, "Host script")
+    c.drawString(left, H - 40 * mm, "Host script")
     c.setFillColor(MUTED)
     c.setFont("Montserrat-Regular", 9)
-    c.drawString(left, H - 51 * mm,
+    c.drawString(left, H - 46.5 * mm,
                  "Read the text slowly. The words on the bingo cards are highlighted.")
 
     pattern = re.compile(
@@ -377,13 +453,13 @@ def make_host_pdf(path):
         return pattern.sub(
             lambda m: f'<font name="Montserrat-Bold" backColor="{marker}">{m.group(0)}</font>', text)
 
-    body = ParagraphStyle("body", fontName="Montserrat-Regular", fontSize=10.5, leading=15.5,
-                          textColor=BLUE, alignment=TA_LEFT, spaceAfter=6.5)
+    body = ParagraphStyle("body", fontName="Montserrat-Regular", fontSize=10.5, leading=14.6,
+                          textColor=BLUE, alignment=TA_LEFT, spaceAfter=5.5)
     intro = ParagraphStyle("intro", parent=body, fontName="Montserrat-SemiBold")
     label = ParagraphStyle("label", parent=body, fontName="Montserrat-Bold", fontSize=8,
                            textColor=MUTED, spaceAfter=3)
 
-    y = H - 60 * mm
+    y = H - 54 * mm
     width = right - left
 
     def put(p, space=None):
@@ -403,8 +479,8 @@ def make_host_pdf(path):
     c.setFillColor(MUTED)
     c.setFont("Montserrat-Regular", 7.5)
     c.drawString(left, 14 * mm,
-                 f"{len(WORDS)} words in play · {N_CARDS} different cards · "
-                 "a line = full row, column or diagonal")
+                 "Checking a BINGO: all 4 words in the line must already have been read out "
+                 "(highlighted above).")
     c.showPage()
     c.save()
 
