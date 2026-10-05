@@ -14,4 +14,16 @@ Karty: 40 słów z tekstu, każde na dokładnie 2 kartach, każde dwie karty maj
 słowa. Układ dobrany tak, żeby nikt nie miał linii w pierwszych ~40% tekstu, a karty
 kończyły linię w różnych momentach (bez remisów).
 
+## Gry na Family Day (`games.py`)
+
+Każda gra to jedna strona A4 (pionowo), po angielsku, z logo Rho.
+`python3 rho-bingo/games.py` tworzy:
+
+- `rho-games-kids.pdf` — dla dzieci: Family Day Quest (szukanie rzeczy w biurze),
+  Word Search (12 słów z opowieści o Rho), Coffee Run (labirynt), My Grown-up at Work (rysunek).
+- `rho-games-adults.pdf` — dla dorosłych: The Rho Quiz (12 pytań), Find Someone Who…
+  (zapoznawanie się), Unscramble (12 słów z podpowiedziami), Sudoku (4 poziomy).
+
+Odpowiedzi do quizu, Unscramble i sudoku są wydrukowane do góry nogami na dole strony.
+
 Font: Montserrat (Google Fonts, licencja SIL Open Font License).
