@@ -4,10 +4,10 @@ Generates:
   rho-bingo-cards.pdf        5 different 4x4 cards, each A5, two per A4 sheet (cut in half)
   rho-bingo-host-script.pdf  A4 text to read aloud (English) with the bingo words highlighted
 
-Logo: put the file at rho-bingo/logo.png (or logo.jpg) and run the script again.
-Without it a plain "Rho" wordmark is drawn in its place.
+Logo: rho-bingo/logo.pdf (vector, embedded as is) or logo.png / logo.jpg.
+Without one a plain "Rho" wordmark is drawn in its place.
 
-    pip install reportlab
+    pip install reportlab pdfrw
     python3 rho-bingo/generate.py
 """
 
@@ -16,7 +16,10 @@ import re
 from itertools import permutations
 from pathlib import Path
 
-from reportlab.lib.colors import HexColor, white
+from pdfrw import PdfReader as PdfrwReader
+from pdfrw.buildxobj import pagexobj
+from pdfrw.toreportlab import makerl
+from reportlab.lib.colors import CMYKColor, white
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.pagesizes import A4, A5, landscape
 from reportlab.lib.styles import ParagraphStyle
@@ -29,12 +32,13 @@ from reportlab.platypus import Paragraph
 
 HERE = Path(__file__).resolve().parent
 
-# --- Colours (one place to adjust the brand palette) ---------------------------
-NAVY = HexColor("#0B2545")
-ACCENT = HexColor("#00A3AD")
-TINT = HexColor("#E6F4F5")
-LINE = HexColor("#BFDCE0")
-MUTED = HexColor("#5B6B7F")
+# --- Colours: CMYK, the blue and green are taken from the Rho logo ---------------
+BLUE = CMYKColor(0.94, 0.71, 0.21, 0.05)
+GREEN = CMYKColor(0.60, 0.05, 0.95, 0)
+TINT = CMYKColor(0.08, 0.03, 0, 0)          # cell background
+GREEN_TINT = CMYKColor(0.14, 0, 0.26, 0)    # highlighter in the host script
+LINE = CMYKColor(0.22, 0.12, 0.02, 0)
+MUTED = CMYKColor(0.40, 0.28, 0.15, 0.30)
 
 # --- Fonts ---------------------------------------------------------------------
 for name in ("Regular", "SemiBold", "Bold", "ExtraBold"):
@@ -173,7 +177,7 @@ def build_cards():
 
 # --- Drawing helpers -----------------------------------------------------------
 def logo_file():
-    for name in ("logo.png", "logo.jpg", "logo.jpeg"):
+    for name in ("logo.pdf", "logo.png", "logo.jpg", "logo.jpeg"):
         if (HERE / name).exists():
             return HERE / name
     return None
@@ -181,6 +185,16 @@ def logo_file():
 
 def draw_logo(c, x, y_top, max_w, max_h):
     path = logo_file()
+    if path and path.suffix == ".pdf":
+        form = pagexobj(PdfrwReader(str(path)).pages[0])
+        x0, y0, x1, y1 = (float(v) for v in form.BBox)
+        scale = min(max_w / (x1 - x0), max_h / (y1 - y0))
+        c.saveState()
+        c.translate(x - x0 * scale, y_top - (y1 - y0) * scale - y0 * scale)
+        c.scale(scale, scale)
+        c.doForm(makerl(c, form))
+        c.restoreState()
+        return
     if path:
         img = ImageReader(str(path))
         iw, ih = img.getSize()
@@ -188,7 +202,7 @@ def draw_logo(c, x, y_top, max_w, max_h):
         w, h = iw * scale, ih * scale
         c.drawImage(img, x, y_top - h, w, h, mask="auto")
         return
-    c.setFillColor(NAVY)
+    c.setFillColor(BLUE)
     c.setFont("Montserrat-ExtraBold", max_h / mm * 2.2)
     c.drawString(x, y_top - max_h * 0.82, "Rho")
 
@@ -250,20 +264,25 @@ def draw_card(c, ox, oy, number, grid, cell_size=CELL):
     draw_logo(c, left, H - 13 * mm, 48 * mm, 12 * mm)
 
     pill_w, pill_h = 32 * mm, 6.2 * mm
-    c.setFillColor(ACCENT)
+    c.setFillColor(GREEN)
     c.roundRect(right - pill_w, H - 13 * mm - pill_h, pill_w, pill_h, pill_h / 2, stroke=0, fill=1)
     c.setFillColor(white)
     spaced(c, "FAMILY DAY", right - pill_w / 2, H - 13 * mm - pill_h + 2.05 * mm,
-           "Montserrat-Bold", 7.5, 1.2, align="center")
+           "Montserrat-ExtraBold", 7.5, 1.2, align="center")
     c.setFillColor(MUTED)
     spaced(c, f"CARD {number:02d}", right, H - 25 * mm, "Montserrat-SemiBold", 7, 1.2, align="right")
 
     # title
-    c.setFillColor(NAVY)
+    c.setFillColor(BLUE)
     spaced(c, "BINGO", W / 2, H - 40 * mm, "Montserrat-ExtraBold", 40, 4, align="center")
-    c.setFillColor(ACCENT)
+    parts = [("Listen", BLUE), ("  •  ", GREEN), ("Mark", BLUE), ("  •  ", GREEN),
+             ("Shout BINGO!", BLUE)]
     c.setFont("Montserrat-SemiBold", 9)
-    c.drawCentredString(W / 2, H - 47 * mm, "Listen  ·  Mark  ·  Shout BINGO!")
+    x = W / 2 - sum(pdfmetrics.stringWidth(t, "Montserrat-SemiBold", 9) for t, _ in parts) / 2
+    for text, colour in parts:
+        c.setFillColor(colour)
+        c.drawString(x, H - 47 * mm, text)
+        x += pdfmetrics.stringWidth(text, "Montserrat-SemiBold", 9)
 
     # grid
     gap = 2.4 * mm
@@ -281,7 +300,7 @@ def draw_card(c, ox, oy, number, grid, cell_size=CELL):
             leading = CELL_SIZE_PT * 1.18
             block = leading * (len(lines) - 1)
             base = y + cell_size / 2 + block / 2 - CELL_SIZE_PT * 0.35
-            c.setFillColor(NAVY)
+            c.setFillColor(BLUE)
             c.setFont(CELL_FONT, CELL_SIZE_PT)
             for i, line in enumerate(lines):
                 c.drawCentredString(x + cell_size / 2, base - i * leading, line)
@@ -289,7 +308,7 @@ def draw_card(c, ox, oy, number, grid, cell_size=CELL):
     # footer: name line + rules
     grid_bottom = gy_top - SIZE * cell_size - (SIZE - 1) * gap
     y = grid_bottom - 9 * mm
-    c.setFillColor(NAVY)
+    c.setFillColor(BLUE)
     c.setFont("Montserrat-SemiBold", 8.5)
     c.drawString(gx, y, "Name:")
     c.setStrokeColor(LINE)
@@ -307,7 +326,7 @@ def draw_card(c, ox, oy, number, grid, cell_size=CELL):
 
 def draw_cut_line(c, x, height):
     c.saveState()
-    c.setStrokeColor(HexColor("#9AA5B1"))
+    c.setStrokeColor(MUTED)
     c.setLineWidth(0.5)
     c.setDash(3, 3)
     c.line(x, 4 * mm, x, height - 4 * mm)
@@ -337,10 +356,10 @@ def make_host_pdf(path):
     left, right = 22 * mm, W - 22 * mm
 
     draw_logo(c, left, H - 18 * mm, 50 * mm, 12 * mm)
-    c.setFillColor(ACCENT)
+    c.setFillColor(GREEN)
     spaced(c, "FAMILY DAY  ·  RHO BINGO", right, H - 25 * mm,
            "Montserrat-Bold", 8, 1.4, align="right")
-    c.setFillColor(NAVY)
+    c.setFillColor(BLUE)
     c.setFont("Montserrat-ExtraBold", 22)
     c.drawString(left, H - 44 * mm, "Host script")
     c.setFillColor(MUTED)
@@ -352,13 +371,14 @@ def make_host_pdf(path):
         r"\b(" + "|".join(re.escape(w) for w in sorted(WORDS, key=len, reverse=True)) + r")\b",
         re.IGNORECASE,
     )
-    accent_hex = "#" + ACCENT.hexval()[2:]
+    marker = "cmyk({},{},{},{})".format(*GREEN_TINT.cmyk())
 
     def highlight(text):
-        return pattern.sub(lambda m: f'<font name="Montserrat-Bold" color="{accent_hex}">{m.group(0)}</font>', text)
+        return pattern.sub(
+            lambda m: f'<font name="Montserrat-Bold" backColor="{marker}">{m.group(0)}</font>', text)
 
     body = ParagraphStyle("body", fontName="Montserrat-Regular", fontSize=10.5, leading=15.5,
-                          textColor=NAVY, alignment=TA_LEFT, spaceAfter=6.5)
+                          textColor=BLUE, alignment=TA_LEFT, spaceAfter=6.5)
     intro = ParagraphStyle("intro", parent=body, fontName="Montserrat-SemiBold")
     label = ParagraphStyle("label", parent=body, fontName="Montserrat-Bold", fontSize=8,
                            textColor=MUTED, spaceAfter=3)
