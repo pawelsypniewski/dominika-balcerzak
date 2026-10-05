@@ -101,8 +101,6 @@ QUEST = [
     "Wypatrz logo Rho gdzieś w biurze",
     "Znajdź ekspres do kawy",
     "Znajdź roślinę",
-    "Znajdź tablicę do pisania",
-    "Odwiedź biurko mamy lub taty",
     "Policz krzesła w sali spotkań",
     "Znajdź komputer z dwoma monitorami",
     "Znajdź coś okrągłego",
@@ -131,7 +129,7 @@ def page_quest(c):
                "Zwiedź biuro z mamą lub tatą. Zaznacz każde pole, gdy coś znajdziesz!",
                "DLA DZIECI")
     gap = 4 * mm
-    box_w, box_h = (CW - gap) / 2, 20 * mm
+    box_w, box_h = (CW - gap) / 2, 23 * mm
     rows = (len(QUEST) + 1) // 2
     for i, item in enumerate(QUEST):
         col, row = i // rows, i % rows
