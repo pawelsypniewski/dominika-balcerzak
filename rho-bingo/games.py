@@ -1,8 +1,8 @@
 """Rho Family Day — printable games, one A4 page each.
 
 Generates:
-  rho-games-kids.pdf    Family Day Quest, Word Search, Coffee Run (maze), My Grown-up at Work
-  rho-games-adults.pdf  The Rho Quiz, Find Someone Who, Unscramble, Sudoku
+  rho-gry-dzieci.pdf    Misja Family Day, Wykreślanka, Kawowy labirynt, Mama lub tata w pracy
+  rho-gry-dorosli.pdf   Quiz o Rho, Znajdź kogoś, kto…, Rozszyfruj, Sudoku (in Polish)
 
 Answers (quiz, unscramble, sudoku) are printed upside down at the bottom of the page.
 Uses the fonts, colours and logo from generate.py.
@@ -97,20 +97,20 @@ def checkbox(c, x, y, size):
 
 # --- Kids: Family Day Quest ----------------------------------------------------
 QUEST = [
-    "Find something green, just like the Rho logo",
-    "Spot the Rho logo somewhere in the office",
-    "Find the coffee machine",
-    "Find a plant",
-    "Find a whiteboard",
-    "Visit your grown-up's desk",
-    "Count the chairs in a meeting room",
-    "Find a computer with two screens",
-    "Find something round",
-    "Find something that starts with the letter R",
-    "Say “hello” to someone new",
-    "Ask someone what their job is",
-    "Give a high five to one of your grown-up's teammates",
-    "Find the window with the best view",
+    "Znajdź coś zielonego, jak logo Rho",
+    "Wypatrz logo Rho gdzieś w biurze",
+    "Znajdź ekspres do kawy",
+    "Znajdź roślinę",
+    "Znajdź tablicę do pisania",
+    "Odwiedź biurko mamy lub taty",
+    "Policz krzesła w sali spotkań",
+    "Znajdź komputer z dwoma monitorami",
+    "Znajdź coś okrągłego",
+    "Znajdź coś na literę R",
+    "Powiedz „cześć” komuś nowemu",
+    "Zapytaj kogoś, czym się zajmuje",
+    "Przybij piątkę komuś z zespołu mamy lub taty",
+    "Znajdź okno z najładniejszym widokiem",
 ]
 
 
@@ -127,9 +127,9 @@ def draw_star(c, cx, cy, r_out, r_in):
 
 
 def page_quest(c):
-    y = header(c, "FAMILY DAY QUEST",
-               "Explore the office with your grown-up. Tick every box when you find it!",
-               "FOR KIDS")
+    y = header(c, "MISJA FAMILY DAY",
+               "Zwiedź biuro z mamą lub tatą. Zaznacz każde pole, gdy coś znajdziesz!",
+               "DLA DZIECI")
     gap = 4 * mm
     box_w, box_h = (CW - gap) / 2, 20 * mm
     rows = (len(QUEST) + 1) // 2
@@ -153,14 +153,14 @@ def page_quest(c):
     draw_star(c, M + 16 * mm, bottom - 20 * mm, 14 * mm, 6 * mm)
     c.setFillColor(GREEN)
     c.setFont("Montserrat-ExtraBold", 15)
-    c.drawString(M + 36 * mm, bottom - 15 * mm, "Quest complete!")
-    write_line(c, M + 36 * mm, bottom - 26 * mm, "Signed by a Rho team member:", CW - 36 * mm)
-    write_line(c, M, 20 * mm, "My name:", CW)
+    c.drawString(M + 36 * mm, bottom - 15 * mm, "Misja wykonana!")
+    write_line(c, M + 36 * mm, bottom - 26 * mm, "Podpis kogoś z Rho:", CW - 36 * mm)
+    write_line(c, M, 20 * mm, "Moje imię:", CW)
 
 
 # --- Kids: Word Search ---------------------------------------------------------
-SEARCH_WORDS = ["TEAM", "COFFEE", "SCIENCE", "HEALTH", "IDEAS", "FUTURE",
-                "ENERGY", "TRUST", "PASSION", "PATIENTS", "EXPERTS", "DESK"]
+SEARCH_WORDS = ["ZESPÓŁ", "KAWA", "NAUKA", "ZDROWIE", "POMYSŁY", "PRZYSZŁOŚĆ",
+                "ENERGIA", "ZAUFANIE", "PASJA", "PACJENCI", "EKSPERCI", "BIURKO"]
 SEARCH_SIZE = 12
 
 
@@ -188,16 +188,16 @@ def build_word_search(seed=7):
             else:
                 break
         else:
-            filler = "ABCDEFGHIKLMNOPRSTUWY"
+            filler = "AAĄBCĆDEEĘGHIIJKLŁMNŃOOÓPRSŚTUWYYZŹŻ"
             grid = [[ch or rng.choice(filler) for ch in row] for row in grid]
             if all(occurrences(grid, w) == 1 for w in SEARCH_WORDS):
                 return grid
 
 
 def page_word_search(c):
-    y = header(c, "WORD SEARCH",
-               "Find the 12 words from the Rho story. They go across or down.",
-               "FOR KIDS")
+    y = header(c, "WYKREŚLANKA",
+               "Znajdź 12 słów z opowieści o Rho. Biegną poziomo albo pionowo.",
+               "DLA DZIECI")
     grid = build_word_search()
     cell = 12.4 * mm
     size = SEARCH_SIZE * cell
@@ -220,7 +220,7 @@ def page_word_search(c):
         c.setFillColor(BLUE)
         c.setFont("Montserrat-SemiBold", 10.5)
         c.drawString(x + 11 * mm, yy, word)
-    write_line(c, M, 20 * mm, "My name:", CW)
+    write_line(c, M, 20 * mm, "Moje imię:", CW)
 
 
 # --- Kids: maze ----------------------------------------------------------------
@@ -272,9 +272,9 @@ def team_icon(c, x, y, s):
 
 
 def page_maze(c):
-    y = header(c, "COFFEE RUN",
-               "The team meeting is about to start! Help the coffee find its way to the team.",
-               "FOR KIDS")
+    y = header(c, "KAWOWY LABIRYNT",
+               "Zaraz zaczyna się spotkanie! Pomóż kawie dotrzeć do zespołu.",
+               "DLA DZIECI")
     rows, cols, cell = 13, 14, 11.4 * mm
     maze = build_maze(rows, cols)
     mw, mh = cols * cell, rows * cell
@@ -300,15 +300,15 @@ def page_maze(c):
     c.setFont("Montserrat-ExtraBold", 11)
     c.drawString(mx + cell + 8 * mm, top + 6 * mm, "START")
     team_icon(c, mx + mw - cell * 1.3, top - mh - 15 * mm, 11 * mm)
-    c.drawRightString(mx + mw - cell * 1.6, top - mh - 9 * mm, "TEAM MEETING")
-    write_line(c, M, 20 * mm, "My name:", CW)
+    c.drawRightString(mx + mw - cell * 1.6, top - mh - 9 * mm, "SPOTKANIE ZESPOŁU")
+    write_line(c, M, 20 * mm, "Moje imię:", CW)
 
 
 # --- Kids: drawing -------------------------------------------------------------
 def page_drawing(c):
-    y = header(c, "MY GROWN-UP AT WORK",
-               "What does your grown-up do all day at Rho? Draw it in the frame!",
-               "FOR KIDS")
+    y = header(c, "MAMA LUB TATA W PRACY",
+               "Co robi Twoja mama lub Twój tata w Rho? Narysuj to w ramce!",
+               "DLA DZIECI")
     frame_h = 150 * mm
     c.setStrokeColor(GREEN)
     c.setLineWidth(2)
@@ -316,48 +316,48 @@ def page_drawing(c):
     c.roundRect(M, y - frame_h, CW, frame_h, 5 * mm, stroke=1, fill=0)
     c.setDash()
     yy = y - frame_h - 14 * mm
-    for label in ("My grown-up's name is", "At Rho, my grown-up helps",
-                  "The best thing about today:", "My name:"):
+    for label in ("Moja mama / mój tata ma na imię", "W Rho moja mama / mój tata pomaga",
+                  "Dziś najbardziej podobało mi się:", "Moje imię:"):
         write_line(c, M, yy, label, CW, font_size=10.5)
         yy -= 13 * mm
 
 
 # --- Adults: quiz --------------------------------------------------------------
 QUIZ = [
-    ("How long has Rho been around?",
-     ["About 10 years", "About 25 years", "Over 40 years"], 2),
-    ("What does “CRO” stand for?",
+    ("Od jak dawna działa Rho?",
+     ["Od około 10 lat", "Od około 25 lat", "Od ponad 40 lat"], 2),
+    ("Co oznacza skrót „CRO”?",
      ["Clinical Review Office", "Contract Research Organization", "Central Research Operations"], 1),
-    ("What does Rho call the power of connections between people, science and a shared purpose?",
-     ["The Cohesion Effect", "The Network Effect", "The Butterfly Effect"], 0),
-    ("Rho's mission: improve health, extend lives and raise people's…",
-     ["salaries", "quality of life", "number of meetings"], 1),
-    ("What is a placebo?",
-     ["A look-alike treatment with no active ingredient", "The highest dose of a drug",
-      "A type of blood test"], 0),
-    ("In a double-blind study, who knows which treatment each participant gets?",
-     ["Only the participants", "Only the doctors", "Neither of them, until the study ends"], 2),
-    ("Which trial phase usually tests a treatment in the largest group of patients before approval?",
-     ["Phase I", "Phase II", "Phase III"], 2),
-    ("“Randomization” means participants are…",
-     ["assigned to groups by chance", "chosen by their doctor", "paid a random amount"], 0),
-    ("What is “informed consent”?",
-     ["The sponsor approving the budget", "Agreeing to join a study after learning all about it",
-      "A doctor signing the final report"], 1),
-    ("Which US agency approves new medicines?",
+    ("Jak Rho nazywa siłę połączeń między ludźmi, nauką i wspólnym celem?",
+     ["Cohesion Effect", "Network Effect", "Butterfly Effect"], 0),
+    ("Misja Rho to poprawa zdrowia, wydłużanie życia i podnoszenie…",
+     ["pensji", "jakości życia", "liczby spotkań"], 1),
+    ("Czym jest placebo?",
+     ["Preparatem, który wygląda jak lek, ale nie ma substancji czynnej", "Najwyższą dawką leku",
+      "Rodzajem badania krwi"], 0),
+    ("Kto w badaniu podwójnie ślepym wie, jakie leczenie dostaje uczestnik?",
+     ["Tylko uczestnicy", "Tylko lekarze", "Nikt z nich, aż do końca badania"], 2),
+    ("W której fazie badań klinicznych lek zwykle testuje się na największej grupie pacjentów przed dopuszczeniem?",
+     ["Faza I", "Faza II", "Faza III"], 2),
+    ("„Randomizacja” oznacza, że uczestnicy…",
+     ["trafiają do grup losowo", "są wybierani przez lekarza", "dostają losowe wynagrodzenie"], 0),
+    ("Czym jest „świadoma zgoda”?",
+     ["Akceptacją budżetu przez sponsora", "Zgodą na udział w badaniu po poznaniu wszystkich informacji",
+      "Podpisem lekarza pod raportem końcowym"], 1),
+    ("Która amerykańska agencja dopuszcza nowe leki do obrotu?",
      ["FDA", "NASA", "FBI"], 0),
-    ("In statistics, the median is…",
-     ["the most frequent value", "the average of all values", "the middle value when data are sorted"], 2),
-    ("Who turns clinical trial data into answers?",
-     ["Architects", "Biostatisticians", "Botanists"], 1),
+    ("Mediana w statystyce to…",
+     ["najczęstsza wartość", "średnia wszystkich wartości", "środkowa wartość po uporządkowaniu danych"], 2),
+    ("Kto zamienia dane z badań klinicznych w odpowiedzi?",
+     ["Architekci", "Biostatystycy", "Botanicy"], 1),
 ]
 
 
 def page_quiz(c):
-    y = header(c, "THE RHO QUIZ",
-               "How well do you know Rho and the world of clinical research? "
-               "Circle one answer for each question.",
-               "FOR GROWN-UPS")
+    y = header(c, "QUIZ O RHO",
+               "Jak dobrze znasz Rho i świat badań klinicznych? "
+               "Zakreśl jedną odpowiedź w każdym pytaniu.",
+               "DLA DOROSŁYCH")
     gap = 8 * mm
     col_w = (CW - gap) / 2
     text_x = 9 * mm
@@ -392,39 +392,39 @@ def page_quiz(c):
             yy -= 0.6 * mm
         yy -= 5.5 * mm
 
-    write_line(c, M, 31 * mm, "Name:", CW * 0.62)
-    write_line(c, M + CW * 0.7, 31 * mm, "Score:", CW * 0.3 - 9 * mm)
+    write_line(c, M, 31 * mm, "Imię:", CW * 0.62)
+    write_line(c, M + CW * 0.7, 31 * mm, "Wynik:", CW * 0.3 - 9 * mm)
     c.setFont("Montserrat-SemiBold", 9.5)
     c.drawRightString(M + CW, 31 * mm, f"/ {len(QUIZ)}")
-    answers_line(c, "ANSWERS:  " + "   ".join(f"{i} {'ABC'[a]}" for i, (_, _, a) in enumerate(QUIZ, 1)))
+    answers_line(c, "ODPOWIEDZI:  " + "   ".join(f"{i} {'ABC'[a]}" for i, (_, _, a) in enumerate(QUIZ, 1)))
 
 
 # --- Adults: Find Someone Who --------------------------------------------------
 FIND = [
-    "has worked at Rho for more than 5 years",
-    "joined Rho this year",
-    "drinks tea, not coffee",
-    "speaks three or more languages",
-    "came here today by bike or on foot",
-    "has a dog or a cat",
-    "has run a half marathon (or longer)",
-    "was born in another country",
-    "works with data every single day",
-    "was born in the same month as you",
-    "can play a musical instrument",
-    "has visited the USA",
-    "is at Family Day for the first time",
-    "has a hidden talent (ask what it is!)",
-    "bakes the best cake in the office",
-    "has worked with a colleague from another country this week",
+    "pracuje w Rho dłużej niż 5 lat",
+    "dołączył(a) do Rho w tym roku",
+    "pije herbatę, a nie kawę",
+    "mówi w trzech lub więcej językach",
+    "dotarł(a) tu dziś rowerem lub pieszo",
+    "ma psa lub kota",
+    "przebiegł(a) półmaraton (lub dłużej)",
+    "urodził(a) się w innym kraju",
+    "codziennie pracuje z danymi",
+    "urodził(a) się w tym samym miesiącu co Ty",
+    "gra na jakimś instrumencie",
+    "był(a) w USA",
+    "jest na Family Day pierwszy raz",
+    "ma ukryty talent (zapytaj jaki!)",
+    "piecze najlepsze ciasto w biurze",
+    "w tym tygodniu pracował(a) z kimś z innego kraju",
 ]
 
 
 def page_find(c):
-    y = header(c, "FIND SOMEONE WHO…",
-               "Mingle! Find a person who matches each square and write their name in it. "
-               "Use a different person for every square. First to fill a whole line wins!",
-               "FOR GROWN-UPS")
+    y = header(c, "ZNAJDŹ KOGOŚ, KTO…",
+               "Poznajcie się! Znajdź osobę pasującą do każdego pola i wpisz jej imię. "
+               "Każde pole to inna osoba. Wygrywa ten, kto pierwszy wypełni całą linię!",
+               "DLA DOROSŁYCH")
     gap = 3 * mm
     cell_w = (CW - 3 * gap) / 4
     cell_h = 41 * mm
@@ -445,24 +445,24 @@ def page_find(c):
         c.line(x + 3 * mm, top - cell_h + 7 * mm, x + cell_w - 3 * mm, top - cell_h + 7 * mm)
         c.setFillColor(MUTED)
         c.setFont("Montserrat-Regular", 6.5)
-        c.drawString(x + 3 * mm, top - cell_h + 3.6 * mm, "Name")
-    write_line(c, M, 20 * mm, "My name:", CW)
+        c.drawString(x + 3 * mm, top - cell_h + 3.6 * mm, "Imię")
+    write_line(c, M, 20 * mm, "Moje imię:", CW)
 
 
 # --- Adults: Unscramble --------------------------------------------------------
 UNSCRAMBLE = [
-    ("PROTOCOL", "The rulebook every trial follows"),
-    ("VOLUNTEER", "Someone who chooses to take part"),
-    ("DATABASE", "Where all the trial data lives"),
-    ("VACCINE", "Trains your immune system"),
-    ("DIAGNOSIS", "Finding out what is wrong"),
-    ("MICROSCOPE", "Makes tiny things look big"),
-    ("LABORATORY", "Where the experiments happen"),
-    ("INNOVATION", "A new idea put to work"),
-    ("TEAMWORK", "Better together"),
-    ("CURIOSITY", "Where every discovery starts"),
-    ("MOLECULE", "A tiny group of atoms"),
-    ("HYPOTHESIS", "An idea you test with data"),
+    ("PROTOKÓŁ", "Zasady, których trzyma się każde badanie"),
+    ("OCHOTNIK", "Ktoś, kto sam zgłasza się do badania"),
+    ("STATYSTYKA", "Zamienia liczby w odpowiedzi"),
+    ("LEKARSTWO", "Pomaga wyzdrowieć"),
+    ("DIAGNOZA", "Ustalenie, co komuś dolega"),
+    ("MIKROSKOP", "Powiększa maleńkie rzeczy"),
+    ("PROBÓWKA", "Szklane naczynko z laboratorium"),
+    ("INNOWACJA", "Nowy pomysł wcielony w życie"),
+    ("WSPÓŁPRACA", "Razem raźniej"),
+    ("CIEKAWOŚĆ", "Od niej zaczyna się każde odkrycie"),
+    ("CZĄSTECZKA", "Maleńka grupa atomów"),
+    ("HIPOTEZA", "Pomysł, który sprawdzasz danymi"),
 ]
 
 
@@ -476,9 +476,9 @@ def scramble(word, rng):
 
 
 def page_unscramble(c):
-    y = header(c, "UNSCRAMBLE",
-               "Put the letters back in the right order. The hints will help you!",
-               "FOR GROWN-UPS")
+    y = header(c, "ROZSZYFRUJ",
+               "Ułóż litery we właściwej kolejności. Podpowiedzi Ci pomogą!",
+               "DLA DOROSŁYCH")
     rng = random.Random(3)
     gap = 8 * mm
     col_w = (CW - gap) / 2
@@ -506,9 +506,9 @@ def page_unscramble(c):
         c.setStrokeColor(LINE)
         c.setLineWidth(0.9)
         c.line(x + 9 * mm, top - tile - 14 * mm, x + col_w, top - tile - 14 * mm)
-    write_line(c, M, 31 * mm, "Name:", CW)
+    write_line(c, M, 31 * mm, "Imię:", CW)
     words = [f"{i}. {w}" for i, (w, _) in enumerate(UNSCRAMBLE, 1)]
-    answers_line(c, "ANSWERS:  " + "  ·  ".join(words[:6]), "  ·  ".join(words[6:]), y=19 * mm)
+    answers_line(c, "ODPOWIEDZI:  " + "  ·  ".join(words[:6]), "  ·  ".join(words[6:]), y=19 * mm)
 
 
 # --- Adults: Sudoku ------------------------------------------------------------
@@ -575,11 +575,11 @@ def draw_sudoku(c, x, top, cell, grid, font_size, shade_givens=True):
 
 def page_sudoku(c):
     y = header(c, "SUDOKU",
-               "Fill every row, column and 3×3 box with the numbers 1 to 9, "
-               "each one exactly once. Start easy and work your way up!",
-               "FOR GROWN-UPS")
+               "Wpisz cyfry od 1 do 9 tak, aby w każdym wierszu, kolumnie i kwadracie 3×3 "
+               "każda pojawiła się dokładnie raz. Zacznij od łatwego!",
+               "DLA DOROSŁYCH")
     rng = random.Random(2026)
-    levels = [("EASY", 40), ("MEDIUM", 34), ("HARD", 29), ("EXPERT", 25)]
+    levels = [("ŁATWE", 40), ("ŚREDNIE", 34), ("TRUDNE", 29), ("EKSPERT", 25)]
     puzzles = [(label, *make_sudoku(rng, clues)) for label, clues in levels]
     cell = 8.4 * mm
     size = 9 * cell
@@ -598,7 +598,7 @@ def page_sudoku(c):
     def draw_solutions():
         c.setFillColor(MUTED)
         c.setFont("Montserrat-SemiBold", 7)
-        c.drawString(-span / 2, 9 * small + 2 * mm, "SOLUTIONS")
+        c.drawString(-span / 2, 9 * small + 2 * mm, "ROZWIĄZANIA")
         for n, (label, _, solution) in enumerate(puzzles):
             sx = -span / 2 + n * (9 * small + 6 * mm)
             c.setFillColor(MUTED)
@@ -620,8 +620,8 @@ def make_pdf(path, title, pages):
 
 
 if __name__ == "__main__":
-    make_pdf(HERE / "rho-games-kids.pdf", "Rho Family Day — games for kids",
+    make_pdf(HERE / "rho-gry-dzieci.pdf", "Rho Family Day — gry dla dzieci",
              [page_quest, page_word_search, page_maze, page_drawing])
-    make_pdf(HERE / "rho-games-adults.pdf", "Rho Family Day — games for grown-ups",
+    make_pdf(HERE / "rho-gry-dorosli.pdf", "Rho Family Day — gry dla dorosłych",
              [page_quiz, page_find, page_unscramble, page_sudoku])
     print("done")
